@@ -12,7 +12,10 @@ def _():
 
     import marimo as mo
 
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    sys.path.insert(0, str(next(
+        _parent for _parent in Path(__file__).resolve().parents
+        if (_parent / "llm_exercises" / "block1.py").is_file()
+    )))
     from llm_exercises.block1 import (
         ENCODING_NAME, EXAMPLES, check_budget, check_inspect,
         load_tokenizer, token_rows, toy_request,

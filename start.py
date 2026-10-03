@@ -31,7 +31,7 @@ def main():
     print(f"Opening the editor at http://127.0.0.1:{args.port}. Keep this terminal open; Ctrl+C stops it.", flush=True)
     try:
         return subprocess.call(
-            [sys.executable, "-m", "marimo", "edit", str(root / "notebooks" / "01_tokenization_context.py"),
+            [sys.executable, "-m", "marimo", "edit", str(root / "exercises" / "block-01-tokenization-context" / "01_tokenization_context.py"),
              "--host", "127.0.0.1", "--port", str(args.port),
              "--no-token", "--no-sandbox", "--skip-update-check"], cwd=root
         )

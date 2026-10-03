@@ -1,8 +1,9 @@
 # LLM Training Exercises
 
-Prepared Python exercises for the LLM course. Start with **Block 1 — Tokenization & Context**:
-predict token boundaries, compare English/German/code, and calculate a context budget.
-The notebook guides you through two small `# TODO` areas. Everything else is provided.
+Prepared marimo exercises for the LLM course, using one shared Python environment.
+This README covers repository access, installation, starting/stopping marimo and
+general troubleshooting. Learning goals and task instructions belong in each
+[exercise folder’s README](exercises/README.md).
 
 **You need:** a browser, an internet connection for the first setup, and `uv`.
 No separate Python installation, API key, paid account, GPU, Docker, Conda or editor is required.
@@ -77,30 +78,23 @@ uv run --offline --locked python start.py
 Moving the folder to another computer does not move a usable Python environment.
 Repeat setup on that computer. Optional documentation links need internet, but the exercise does not.
 
-## What to do in Block 1
+## Choose an exercise
 
-1. Record the ranking and reasons from your Token Detective group before measuring.
-2. Show the code in **TODO 1** and replace two `None` values to encode text and count IDs.
-3. Run the cell with **Shift+Enter**. The check, comparison table and token inspector update.
-4. Change one word, space, newline or symbol in a text box. Predict first; record before/after counts.
-5. Complete **TODO 2**: calculate remaining context space and whether the request fits.
-6. Test an overflowing request, an exact fit, and one revised budget; explain the tradeoff.
-7. Download your findings and save the notebook code. Bring one surprising result to the discussion.
+See the [exercise index](exercises/README.md), then read the README in the selected
+block folder. Each folder contains its own notebook, tasks and task-specific help.
 
-Hints are folded below each TODO. A **waiting** message on first launch is expected;
-the notebook is intentionally unfinished. Only edit the two marked TODO areas at first.
-The setup and display cells are prepared. Basic Python is enough.
+| Available block | Instructions |
+|---|---|
+| 1 — Tokenization & Context | [Block 1 README](exercises/block-01-tokenization-context/README.md) |
 
-The tokenizer is **tiktoken / cl100k_base**, used as a concrete BPE example. It is not a universal
-tokenizer or a claim about a current model's context limit. All budgets, role labels and cost
-rates are labelled teaching examples. The optional request experiment demonstrates formatting
-overhead using a toy format; use a real model's own chat template for production accounting.
+Only Block 1 is currently supplied. The launcher opens that block by default.
+Future blocks will use separate folders and the same shared environment.
 
 ## Save, stop and return
 
 - Save your code with **Ctrl+S** on Windows/Linux or **Cmd+S** on macOS.
-- Text-box observations are session values. Choose **Download my findings** before closing;
-  the JSON contains your hypotheses, texts, measured counts/IDs, budget and explanations.
+- Save session inputs using the block’s documented findings export before closing.
+  Browser input values are not automatically saved into the notebook code.
 - Stop with **Ctrl+C** in the terminal. Restart with the same launch command.
 - Keep your downloaded JSON with your notebook (downloads may initially go to the browser's Downloads folder).
 - To preserve a checkpoint with Git, commit your notebook changes on your own local branch.
@@ -118,11 +112,8 @@ That is simpler and safer than resetting your whole checkout.
 | Browser did not open | Manually open `http://127.0.0.1:2718` on the same computer. Keep the terminal running. |
 | Port 2718 already in use | Run `uv run --locked python start.py --port 2719`, then use `http://127.0.0.1:2719`. |
 | Cannot find `start.py` | Open the terminal in the extracted/cloned exercise folder, where README.md and start.py are visible. |
-| Red error after editing a TODO | Undo your last edit, check indentation and spelling, keep the function's return line, and rerun with Shift+Enter. |
-| Check still says waiting | Replace **both** `None` values in that TODO, then run the cell. |
-| Weird `\x..` in token pieces | A token can contain only part of a UTF-8 character. Inspect bytes and the full-sequence decode; this is expected. |
-| Changes in text boxes are gone after restarting | Those are session inputs; save them with **Download my findings** before closing. Saved Python code remains in the notebook file. |
-| Browser screen too crowded | Collapse code cells you are not editing. You only need the TODO code and the results. |
+
+For coding feedback, notebook outputs and saving observations, see your block’s README.
 
 The supported classroom targets are current Windows 10/11, macOS (Intel/Apple Silicon),
 and Linux on platforms with the locked dependencies' Python wheels. Unusual architectures,
@@ -133,14 +124,11 @@ checks are in `.github/workflows/check.yml`; their actual results are visible in
 
 | Path | Purpose |
 |---|---|
-| `notebooks/01_tokenization_context.py` | Your editable marimo starter, with two TODO areas |
+| [exercises/](exercises/README.md) | Exercise index; one folder and README per block |
 | `start.py`, `start.sh`, `start.cmd` | Cross-platform launchers and pre-class check |
 | `pyproject.toml`, `uv.lock`, `.python-version` | Reproducible Python environment |
 | `llm_exercises/` | Prepared display, tokenizer and feedback helpers |
 | `tests/` | Checks for setup, feedback and the unfinished starter |
-
-Only Block 1 is supplied so far. Other blocks can be added here without asking students
-to install a separate environment for each exercise.
 
 ## For trainers and maintainers
 
@@ -150,7 +138,6 @@ and are excluded from Git. Run the public starter checks with:
 
 ```sh
 uv run --locked python start.py --check
-uv run --locked marimo check --strict notebooks/01_tokenization_context.py
 uv run --locked python -m unittest discover -s tests -v
 ```
 
@@ -159,10 +146,11 @@ In the parent repository it is registered as the `llm-training-exercises` Git su
 Parent maintainers obtain it with `git submodule update --init llm-training-exercises`;
 after exercise changes are committed here, update the parent submodule pointer.
 
+Add future blocks as `exercises/block-XX-topic/`, with a README and notebook. Keep shared
+setup here and the learning goals, TODO walkthrough, result requirements and specialized
+troubleshooting in that block’s README. Update the exercise index and path references.
+
 Sources: [marimo project environments](https://docs.marimo.io/guides/package_management/projects/),
-[uv + marimo](https://docs.astral.sh/uv/guides/integration/marimo/),
-[tiktoken implementation](https://github.com/openai/tiktoken),
-[SentencePiece](https://github.com/google/sentencepiece),
-[Hugging Face chat templates](https://huggingface.co/docs/transformers/main/en/chat_templating).
+[uv + marimo](https://docs.astral.sh/uv/guides/integration/marimo/).
 
 Exercise code and documentation: MIT; see [LICENSE](LICENSE). Third-party packages retain their own licenses.

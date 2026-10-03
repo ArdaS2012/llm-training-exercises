@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 from llm_exercises.block1 import ROOT, check_budget, check_inspect, load_tokenizer
 
-NOTEBOOK = ROOT / "notebooks" / "01_tokenization_context.py"
+NOTEBOOK = ROOT / "exercises" / "block-01-tokenization-context" / "01_tokenization_context.py"
 
 
 def student_function(name):

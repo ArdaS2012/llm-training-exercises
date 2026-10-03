@@ -25,7 +25,7 @@ jobs:
       - name: Download tokenizer and verify pre-class setup
         run: uv run --locked python start.py --check
       - name: Check marimo structure
-        run: uv run --locked marimo check --strict notebooks/01_tokenization_context.py
+        run: uv run --locked marimo check --strict exercises/block-01-tokenization-context/01_tokenization_context.py
       - name: Student starter and setup checks
         run: uv run --locked python -m unittest discover -s tests -v
       - name: Verify cached launch without internet downloads
