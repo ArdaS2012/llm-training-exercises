@@ -1,0 +1,18 @@
+[project]
+name = "llm-training-exercises"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "marimo==0.25.1",
+    "tiktoken==0.14.0",
+]
+
+[tool.marimo.runtime]
+auto_instantiate = true
+on_cell_change = "autorun"
+
+[tool.marimo.display]
+theme = "light"
+
+[tool.marimo.ai]
+enabled = false
