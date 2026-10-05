@@ -9,3 +9,7 @@ results*.json
 results*.csv
 # Instructor answers, reference measurements and solution checks stay local.
 /instructor/
+
+# Local models and participant documents must never be distributed.
+.cache/
+/documents/

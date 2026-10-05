@@ -6,5 +6,8 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
-uv run --locked python start.py %*
+set "task_uv_group="
+for %%a in (%*) do if "%%~a"=="d2-1" set "task_uv_group=--group prompting"
+for %%a in (%*) do if "%%~a"=="d2-2" set "task_uv_group=--group rag"
+uv run --locked %task_uv_group% python start.py %*
 if errorlevel 1 pause

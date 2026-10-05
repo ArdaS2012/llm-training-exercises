@@ -7,7 +7,8 @@ general troubleshooting. Learning goals and task instructions belong in each
 
 **You need:** a browser, an internet connection for the first setup, and `uv`.
 No separate Python installation, API key, paid account, GPU, Docker, Conda or editor is required.
-The exercise runs locally. It does not call an LLM or send your text to a model provider.
+The exercises run locally. Day 1 uses toy calculations; Day 2 prompting runs a small local LLM.
+Prompts are not sent to a model provider. First Day 2 preflight downloads model files from Hugging Face.
 
 ## Start here
 
@@ -86,9 +87,19 @@ block folder. Each folder contains its own notebook, tasks and task-specific hel
 | Available block | Instructions |
 |---|---|
 | 1 — Tokenization & Context | [Block 1 README](exercises/block-01-tokenization-context/README.md) |
+| 2 — Tiny Attention Head | [Block 2 README](exercises/block-02-self-attention/README.md) |
+| 3 — Causal Masking & Sampling | [Block 3 README](exercises/block-03-transformer-architecture/README.md) |
+| 4 — Next-Token Loss & Learning | [Block 4 README](exercises/block-04-training-alignment/README.md) |
 
-Only Block 1 is currently supplied. The launcher opens that block by default.
-Future blocks will use separate folders and the same shared environment.
+Block 1 remains the default. Choose Block 2 with `uv run --locked python start.py --block 2`, or Block 3 with `uv run --locked python start.py --block 3`.
+Run its pre-class check with `uv run --locked python start.py --block 3 --check`;
+then launch offline with `uv run --offline --locked python start.py --block 3`.
+Block 3 uses only supplied toy arrays; it does not download tokenizer/model assets.
+Both wrappers forward `--block 3`, `--check` and `--port` arguments.
+Block 2 uses the same preflight/offline commands with `--block 2`. It also uses local toy arrays.
+Choose Block 4 with `uv run --locked python start.py --block 4`. Its preflight/offline
+commands use the same `--block 4` selection. It uses local toy data and no extra
+assets; both wrappers forward Block 4 selection.
 
 ## Save, stop and return
 
@@ -154,3 +165,15 @@ Sources: [marimo project environments](https://docs.marimo.io/guides/package_man
 [uv + marimo](https://docs.astral.sh/uv/guides/integration/marimo/).
 
 Exercise code and documentation: MIT; see [LICENSE](LICENSE). Third-party packages retain their own licenses.
+
+## Day 2 prompting model setup
+
+Day 2 Block 1 uses a separate optional dependency group in the same locked environment.
+Follow [its README](exercises/day2-block-01-prompt-engineering/README.md) for the extra
+CPU model download and preflight. Select it with `--block d2-1`; Day 1 remains the
+default. Both wrappers detect this selection and include the prompting group.
+Use `--offline-models` after preflight to prohibit model downloads.
+
+## Day 2 Block 2 — Mini-RAG
+
+[Mini-RAG instructions](exercises/day2-block-02-rag/README.md) — two TODOs, own documents, real Chroma/embedding/reranker/generator, source judgments and JSON handoff. Prepare with `uv sync --locked --group rag`; select `uv run --locked --group rag python start.py --block d2-2`. Day 1 default is preserved.

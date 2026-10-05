@@ -16,3 +16,15 @@ theme = "light"
 
 [tool.marimo.ai]
 enabled = false
+
+[dependency-groups]
+prompting = ["transformers==4.57.1", "torch==2.8.0"]
+rag = [{include-group = "prompting"}, "chromadb==1.5.9"]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }

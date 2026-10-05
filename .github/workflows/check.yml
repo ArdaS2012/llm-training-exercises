@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  block1:
+  exercises:
     strategy:
       fail-fast: false
       matrix:
@@ -26,6 +26,33 @@ jobs:
         run: uv run --locked python start.py --check
       - name: Check marimo structure
         run: uv run --locked marimo check --strict exercises/block-01-tokenization-context/01_tokenization_context.py
+      - name: Check Block 2 setup and notebook
+        run: |
+          uv run --locked python start.py --block 2 --check
+          uv run --locked marimo check --strict exercises/block-02-self-attention/02_self_attention.py
+          uv run --offline --locked python start.py --block 2 --check
+      - name: Check Block 3 setup and notebook
+        run: |
+          uv run --locked python start.py --block 3 --check
+          uv run --locked marimo check --strict exercises/block-03-transformer-architecture/03_masking_sampling.py
+          uv run --offline --locked python start.py --block 3 --check
+      - name: Check Block 4 setup and notebook
+        run: |
+          uv run --locked python start.py --block 4 --check
+          uv run --locked marimo check --strict exercises/block-04-training-alignment/04_next_token_learning.py
+          uv run --offline --locked python start.py --block 4 --check
+      - name: Check Day 2 prompting setup and notebook
+        run: |
+          uv sync --locked --group prompting
+          uv run --locked --group prompting python start.py --block d2-1 --check
+          uv run --locked --group prompting marimo check --strict exercises/day2-block-01-prompt-engineering/01_prompt_engineering.py
+          uv run --offline --locked --group prompting python start.py --block d2-1 --offline-models --check
+      - name: Check Day 2 Mini-RAG setup and notebook
+        run: |
+          uv sync --locked --group rag
+          uv run --locked --group rag python start.py --block d2-2 --check
+          uv run --locked --group rag marimo check --strict exercises/day2-block-02-rag/02_mini_rag.py
+          uv run --offline --locked --group rag python start.py --block d2-2 --offline-models --check
       - name: Student starter and setup checks
         run: uv run --locked python -m unittest discover -s tests -v
       - name: Verify cached launch without internet downloads
