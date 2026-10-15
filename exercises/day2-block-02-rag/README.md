@@ -1,6 +1,11 @@
 # Day 2 Block 2 — Mini-RAG over your own documents
 
-Build a traceable retrieval-and-generation pipeline in pairs (45 minutes).
+
+## Exercise + breakout
+
+Follow the [15-minute group task](GROUP_TASK.md) after guided setup.
+
+Build a traceable retrieval-and-generation pipeline in pairs (guided setup, then 15-minute exercise + breakout).
 Prerequisites: basic Python lists/dictionaries, Day 1 context/inference and Day 2
 prompting. Read the [shared setup](../../README.md) first. Two TODOs select
 reranked records and compose labelled context; all other plumbing is supplied.
@@ -63,30 +68,34 @@ does not delete a previously downloaded results file.
 Public sample documents in `samples/` are a technical fallback, explicitly labelled
 fictional. Using only samples does not fulfill the own-document activity.
 
-## Tasks, timing and findings
+## Guided preparation and findings
 
-1. **Prepare/predict (8 min):** inspect your documents; write two answerable
+Use the [15-minute group task](GROUP_TASK.md) for the timed breakout. These steps
+describe the complete investigation across preparation, rooms and plenary review;
+they are not additional consecutive room timers.
+
+1. **Prepare/predict:** inspect your documents; write two answerable
    questions and one whose answer is absent from all documents. Predict supporting
-   passages and the effect of smaller chunks.
-2. **TODO 1 (7 min):** order candidate dictionaries by descending reranker score;
+   passages and the effect of smaller chunks. For Block 4's held-out route, reserve Q2/Q3 now, write references from original sources, freeze both configurations before running, and tune only using Q1. If Q2/Q3 inform a revision, keep their later scores as retrospective diagnostics.
+2. **TODO 1:** order candidate dictionaries by descending reranker score;
    retain `keep` records (or all when fewer exist). Preserve text and metadata.
-3. **TODO 2 (7 min):** return a single context string containing every passage
+3. **TODO 2:** return a single context string containing every passage
    unchanged with its exact `[chunk ID]` label. Test independently of TODO 1.
-4. **Measure (13 min):** press Run for three questions × two chunk settings.
+4. **Measure:** press Run for three questions × two chunk settings.
    Baseline: 80 whitespace words; changed: 40 or 120; both overlap 20. Hold
    model/questions, five candidates and two selected passages fixed. Inspect cosine
    order before reranking, raw logits after reranking and actual generated answers.
-5. **Judge (8 min):** record supported/unsupported/uncertain per answer. Verify
+5. **Judge:** record supported/unsupported/uncertain per answer. Verify
    each citation exists AND supports its claim. Check the absent question across
    original files. Explain one retrieval change and one failure/limitation.
-6. **Save/share (2 min):** save Python and download `results-day2-block2.json`.
+6. **Save/share:** save Python and download `results-day2-block2.json`.
    Provide three baseline question/answer/source records plus the controlled
    comparison and absent-answer finding. Retain the export for Block 4.
 
 The export format `edv-mini-rag-v1` includes document hashes/text, question IDs,
 chunk settings/boundaries, vector/rerank results, selected context, real generator
 metadata/outputs and manual judgments. It is a JSON handoff for future evaluation;
-Block 4's importer is not yet authored. Saving Python alone loses browser values.
+Block 4's supplied `d2-4` importer reads this format. Saving Python alone loses browser values.
 Export before editing settings; edits invalidate reactive run results and judgments
 must be reassessed for a new run. No gain is guaranteed. This tiny generator can
 invent facts/citations or fail to abstain: keep its raw output and explain the error.
@@ -101,9 +110,10 @@ reranking cannot see passages omitted from vector candidates. Repeat setup prefl
 for missing caches; shared README covers proxy/PATH/port problems. Restart from the
 same selection command; saved code persists, downloaded observations are separate.
 
-Actual trainer slides: **21–30** concepts; **31** planned Visual Lab;
-**32 — Hands-on Mini-RAG starts now** launches this notebook;
-**33 — Locate the failure before changing the pipeline** reviews findings.
 Students need no private presenter files. Sources: [RAG](https://arxiv.org/abs/2005.11401),
 [Chroma collections](https://docs.trychroma.com/docs/collections/add-data),
 [FAISS](https://github.com/facebookresearch/faiss/wiki/Getting-started).
+
+## Current teaching handoff
+
+LLM Day 2, Block 2: actual slide **33 — Exercise: diagnose your Mini-RAG** launches the combined exercise + breakout. Return to plenary at the agenda’s room end. The notebook and group task are self-contained; private trainer files are not required.

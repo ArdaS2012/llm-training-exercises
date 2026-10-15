@@ -30,10 +30,30 @@ def _():
 
 
 @app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Exercise + breakout: your shared task
+
+    **15 minutes in pairs after guided setup.** Distinguish the matching function controlled by Q/K from the payload controlled by V.
+
+    1. Predict the strongest source for Query A. Complete the score and Value-mixing TODOs; check shapes and approximately-one row sums. Trace one output coordinate numerically.
+
+    2. Keep a baseline. Add +1 to Q row A, feature 0; record which rows of scores, weights and outputs change. Reset delta to zero.
+
+    3. Add +1 to V row A, feature 0 with Q/K fixed. Compare with the Query intervention and explain the changed output using the relevant attention weight.
+
+    **Bring back:** Baseline and two interventions, one worked output coordinate, invariant checks and a mechanism explanation in the findings export.
+
+    Swap editor/checker halfway. Record in the observation fields, save code and download findings. The complete task and setup are in this block’s `GROUP_TASK.md`. Prerequisite TODOs discussed in plenary belong to setup.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
 def _(K, Q, V, mo):
     mo.md(rf"""
     # Build a tiny attention head
-    **Block 2 · Day 1 slide 38 · 35 minutes in pairs**
+    **Block 2 · Day 1 slide 39 · 15-minute group task after guided setup**
 
     Predict → complete three short TODOs → inspect → change one input → explain.
     All setup, toy matrices, checks and rendering are prepared. Show TODO code,
@@ -54,14 +74,14 @@ def _(K, Q, V, mo):
 @app.cell(hide_code=True)
 def _(mo):
     prediction = mo.ui.text_area(label="Predict the strongest sources for Query A; state what the axes mean", full_width=True, debounce=False)
-    mo.vstack([mo.md("## 1. Predict and inspect (4 minutes)\nKeep your Attention Detective hypothesis, but do not treat these arrays as measurements of the sentence."), prediction])
+    mo.vstack([mo.md("## 1. Predict and inspect \nRecord a calculation hypothesis, but do not treat these arrays as measurements of the sentence."), prediction])
     return (prediction,)
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 2. TODO 1 — Scaled scores (7 minutes)
+    ## 2. TODO 1 — Scaled scores
     For every Query q_i and Key k_j, compute their dot product, then divide by √d_k.
     A dot product multiplies corresponding coordinates and adds the products.
     `zip(q, k)` pairs coordinates; `sum` adds; `math.sqrt` takes a square root.
@@ -91,7 +111,7 @@ def _(check_scores, mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 3. TODO 2 — Stable row softmax (8 minutes)
+    ## 3. TODO 2 — Stable row softmax
     $A_{ij}=\exp(S_{ij}-m_i)/\sum_l\exp(S_{il}-m_i)$, where m_i=max_j S_ij.
     The common row shift cancels in the ratio; it prevents exp(1000) overflowing.
     Each row is a separate source distribution for one Query; sum along columns.
@@ -122,7 +142,7 @@ def _(check_softmax, mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 4. TODO 3 — Weighted Values (6 minutes)
+    ## 4. TODO 3 — Weighted Values
     $O_{ir}=\sum_j A_{ij}V_{jr}$: j indexes sources; r indexes Value coordinates.
     For each Query row, compute one weighted sum for each of d_v Value features.
     `len(v[0])` counts Value features; `len(v)` counts source positions.
@@ -156,7 +176,7 @@ def _(mo):
     delta = mo.ui.number(start=-3, stop=3, step=0.5, value=0, label="Add to one coordinate (0 = baseline)")
     change_prediction = mo.ui.text_area(label="Before changing: which scores, weights or outputs will change, and why?", full_width=True, debounce=False)
     observation = mo.ui.text_area(label="After changing: compare baseline/results; explain one output row and one limitation", full_width=True, debounce=False)
-    mo.vstack([mo.md("## 5. Controlled change (7 minutes)\nPredict first; change just one coordinate. Baseline Q/K/V remain preserved. First change Q, then reset delta to 0 before trying K or V. A Value-only change isolates payload mixing. The fixed heatmap scale is 0–1; greater blue intensity means greater weight, not word importance."), change_prediction, target, changed_row, changed_column, delta, observation])
+    mo.vstack([mo.md("## 5. Controlled change \nPredict first; change just one coordinate. Baseline Q/K/V remain preserved. First change Q, then reset delta to 0 before trying K or V. A Value-only change isolates payload mixing. The fixed heatmap scale is 0–1; greater blue intensity means greater weight, not word importance."), change_prediction, target, changed_row, changed_column, delta, observation])
     return (
         change_prediction,
         changed_column,
@@ -224,7 +244,7 @@ def _(
     _report = dict(prediction=prediction.value, change_prediction=change_prediction.value, observation=observation.value,
                    change=dict(matrix=target.value, row=changed_row.value, column=changed_column.value, delta=delta.value),
                    baseline=baseline, experiment=experiment, checks=dict(scores=scores_ok, weights=weights_ok, values=values_ok))
-    _items = [mo.md("## 6. Save and share (3 minutes)\nSave Python with Ctrl+S / Cmd+S. Download findings before closing: saving code does not retain browser fields/widget values. Bring both heatmaps, scores/weights/outputs, your predictions and one explanation to slides 39–40. These toy weights do not establish linguistic relationships or explain a full model."),
+    _items = [mo.md("## 6. Save and share \nSave Python with Ctrl+S / Cmd+S. Download findings before closing: saving code does not retain browser fields/widget values. Bring both heatmaps, scores/weights/outputs, your predictions and one explanation to slides 39–40. These toy weights do not establish linguistic relationships or explain a full model."),
               mo.download(json.dumps(_report, indent=2).encode(), filename="results-block2.json", label="Download my attention findings")]
     if baseline_svg:
         _items.extend([mo.download(baseline_svg.encode(), filename="attention-baseline.svg", label="Save baseline heatmap"), mo.download(experiment_svg.encode(), filename="attention-changed.svg", label="Save changed heatmap")])

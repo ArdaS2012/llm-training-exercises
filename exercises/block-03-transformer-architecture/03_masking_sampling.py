@@ -38,12 +38,32 @@ def _():
 
 @app.cell(hide_code=True)
 def _(mo):
+    mo.md("""
+    ## Exercise + breakout: your shared task
+
+    **15 minutes in pairs after guided setup.** Separate control of context visibility from control of vocabulary-token selection.
+
+    1. Predict row B visibility. Complete the causal-mask TODO; verify future weights are zero, diagonal/past remain eligible and valid rows sum to one.
+
+    2. Complete top-k selection. Compare T=0.5 and T=2 at the same k=2, seed and draw count; then compare k=1 and k=2 at fixed T. Interpret probabilities separately from sampled frequencies.
+
+    3. Change only the draw count from 200 to 1000. Explain a remaining discrepancy between frequencies and probabilities and why masking cannot replace candidate filtering.
+
+    **Bring back:** Masked heatmap, temperature/top-k comparison, k=1 check and a finite-sample explanation in the findings export.
+
+    Swap editor/checker halfway. Record in the observation fields, save code and download findings. The complete task and setup are in this block’s `GROUP_TASK.md`. Prerequisite TODOs discussed in plenary belong to setup.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
     mo.md(r"""
     # Masking & Sampling
-    **Block 3 · Day 1 slide 58: Apply masking and sampling in marimo**
+    **Block 3 · Day 1 slide 60: Apply masking and sampling in marimo**
 
     Predict → complete three short TODOs → change one input → interpret → download.
-    Work in pairs; swap the editor halfway through. This is a 35-minute exercise.
+    Work in pairs; swap the editor halfway through. This is a 15-minute group task after guided setup.
     Supplied toy arrays make this independent of your progress in the Block 2 notebook.
     No model, API key or additional data download is needed.
 
@@ -105,7 +125,7 @@ def _(SCORES, check_mask, heatmap_svg, mo, row_softmax):
 @app.cell(hide_code=True)
 def _(CANDIDATES, LOGITS, mo):
     mo.md(rf"""
-    ## 2. Temperature and top-k (10 minutes)
+    ## 2. Temperature and top-k
     Vocabulary candidates: {CANDIDATES}; logits z = {LOGITS}, shape (4,).
     These scores are separate from the attention matrix.
 
@@ -175,7 +195,7 @@ def _(mo):
     seed = mo.ui.number(start=0, stop=10000, value=42, step=1, label="Random seed")
     draws = mo.ui.number(start=10, stop=5000, value=200, step=10, label="Draws per fixed distribution")
     interpretation = mo.ui.text_area(label="Record: row B, temperature/top-k comparison, one controlled change, masking vs sampling", full_width=True, debounce=False)
-    mo.vstack([mo.md("## 3. Compare and explain (5 minutes)\nCompare T=0.5/2 and k=1/2. Hold seed and sample count fixed, then change just the seed or draw count. Counts estimate probabilities; rare events need not appear. These are repeated fixed-prefix draws, not generated text. We reset the generator once per setting, never before each draw."), seed, draws, interpretation])
+    mo.vstack([mo.md("## 3. Compare and explain \nCompare T=0.5/2 and k=1/2. Hold seed and sample count fixed, then change just the seed or draw count. Counts estimate probabilities; rare events need not appear. These are repeated fixed-prefix draws, not generated text. We reset the generator once per setting, never before each draw."), seed, draws, interpretation])
     return draws, interpretation, seed
 
 
@@ -206,7 +226,7 @@ def _(
                    masked_weights=masked_weights, sampling=sample_rows,
                    checks=dict(mask=mask_ok, temperature=temperature_ok, top_k=top_k_ok))
     mo.vstack([
-        mo.md("## 4. Save and share (5 minutes)\nSave code with Ctrl+S / Cmd+S. Browser text and widget values are not saved in Python: download findings before closing. Share both heatmaps, the table and your explanation at slide 59, **Compare the mask and the samples**."),
+        mo.md("## 4. Save and share \nSave code with Ctrl+S / Cmd+S. Browser text and widget values are not saved in Python: download findings before closing. Share both heatmaps, the table and your explanation at slide 59, **Compare the mask and the samples**."),
         mo.download(json.dumps(_report, indent=2).encode(), filename="results-block3.json", label="Download findings and comparison table"),
         mo.download(unmasked_svg.encode(), filename="unmasked-attention.svg", label="Save unmasked heatmap"),
         mo.download(masked_svg.encode(), filename="causal-attention.svg", label="Save causal heatmap") if masked_svg else mo.md("Causal heatmap download becomes available after TODO 1."),

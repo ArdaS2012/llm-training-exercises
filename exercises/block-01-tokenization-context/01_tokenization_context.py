@@ -36,12 +36,32 @@ def _():
 
 
 @app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Exercise + breakout: your shared task
+
+    **15 minutes in pairs after guided setup.** Use token measurements and boundary tests to defend a context-budget decision.
+
+    1. Before measuring, rank the three supplied texts and justify one boundary prediction. Complete the encoding/count TODO and compare IDs, pieces and counts.
+
+    2. Choose one text and change only a leading space, punctuation mark or word. Preserve the baseline; explain the changed pieces/count, including a result with unchanged count if that occurs.
+
+    3. Complete the context-budget TODO. Test input 3000, reserve 2000, limit 4000; revise exactly one quantity to fit. Test 6000+2000 with limit 8000 and justify your boundary decision.
+
+    **Bring back:** Three-text measurement table, one controlled-edit comparison, overflow and exact-fit checks, and a justified budget revision in the findings export.
+
+    Swap editor/checker halfway. Record in the observation fields, save code and download findings. The complete task and setup are in this block’s `GROUP_TASK.md`. Prerequisite TODOs discussed in plenary belong to setup.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
 def _(ENCODING_NAME, mo, tokenizer):
     mo.md(f"""
     # Token Detective
     **Block 1 · Tokenization & Context**
 
-    You already predicted how English, German and code might split into tokens.
+    In your room, predict how English, German and code might split into tokens.
     Now test your prediction, inspect the actual pieces, and leave room for an answer.
 
     **Your route:** record a prediction → complete TODO 1 → change one thing →

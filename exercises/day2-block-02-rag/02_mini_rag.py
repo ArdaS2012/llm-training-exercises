@@ -12,14 +12,49 @@ def _():
     import marimo as mo
     sys.path.insert(0, str(next(p for p in Path(__file__).resolve().parents if (p / 'llm_exercises').is_dir())))
     from llm_exercises.rag import read_documents, chunk_documents, retrieve, rerank, validate_selection, validate_context, answer, EMBED_MODEL, EMBED_REVISION, RERANK_MODEL, RERANK_REVISION
-    return EMBED_MODEL, EMBED_REVISION, RERANK_MODEL, RERANK_REVISION, answer, chunk_documents, json, mo, read_documents, rerank, retrieve, validate_context, validate_selection
+
+    return (
+        EMBED_MODEL,
+        EMBED_REVISION,
+        RERANK_MODEL,
+        RERANK_REVISION,
+        answer,
+        chunk_documents,
+        json,
+        mo,
+        read_documents,
+        rerank,
+        retrieve,
+        validate_context,
+        validate_selection,
+    )
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Exercise + breakout: your shared task
+
+    **15 minutes in pairs after guided setup.** Build a small own-document RAG and locate the stage responsible for a result.
+
+    1. Predict source IDs and a chunk-size effect. Complete the reranked evidence-selection TODO; run the supplied baseline plus changed-chunk comparison for all three questions. Keep models, questions, overlap and evidence budget fixed.
+
+    2. For one supported question, compare top retrieved/reranked passages and actual generated answers. Quote original words and identify whether a failure starts in retrieval or generation.
+
+    3. Check the absent-answer question against all documents. Record abstention, invention or uncertainty honestly. Recommend one next fix from evidence and export the records for evaluation.
+
+    **Bring back:** Three paired question/answer/source records, original-source checks, one diagnosed failure/limitation and a justified next fix.
+
+    Swap editor/checker halfway. Record in the observation fields, save code and download findings. The complete task and setup are in this block’s `GROUP_TASK.md`. Prerequisite TODOs discussed in plenary belong to setup.
+    """)
+    return
 
 
 @app.cell(hide_code=True)
 def _(EMBED_MODEL, RERANK_MODEL, mo):
     mo.md(f"""
     # Build a Mini-RAG over your own documents
-    **Day 2 Block 2 · launch slide 32, findings slide 33. Work in pairs: 45 minutes.**
+    **Day 2 Block 2 · launch slide 33. Work in pairs in breakout rooms for 15 minutes after guided setup.**
 
     You will ingest your own permitted text → split chunks → embed → search Chroma →
     rerank → select evidence → generate → check sources. Two short TODOs are yours;
@@ -42,7 +77,7 @@ def _(mo):
     questions = mo.ui.array([mo.ui.text(label=f"Question {i}: {'answer absent from ALL documents' if i == 3 else 'answer supported by your documents'}", full_width=True) for i in [1, 2, 3]])
     prediction = mo.ui.text_area(label="Predict: which source should answer Q1/Q2? Why is Q3 absent? What might smaller chunks lose?", full_width=True, debounce=False)
     changed_size = mo.ui.dropdown(options={"40 words":40,"120 words":120}, value="40 words", label="Changed chunk size; baseline is 80 words. Both use overlap 20.")
-    mo.vstack([mo.md('## 1. Prepare and predict (8 min)\nCreate the documents folder, add your own short files, and write two answerable questions plus one absent-answer question. Do not put the answers into the question. Name expected source passages in your prediction.'), folder, questions, prediction, changed_size])
+    mo.vstack([mo.md('## 1. Prepare and predict \nCreate the documents folder, add your own short files, and write two answerable questions plus one absent-answer question. Do not put the answers into the question. Name expected source passages in your prediction. For Block 4 held-out evaluation, reserve Q2/Q3 and source-derived references now, freeze both configurations before running, and tune only with Q1. If Q2/Q3 inform a revision, their later scores are retrospective diagnostics.'), folder, questions, prediction, changed_size])
     return changed_size, folder, prediction, questions
 
 
@@ -56,13 +91,13 @@ def _(folder, mo, read_documents):
         document_issue = str(_exc)
     mo.vstack([mo.callout(document_issue, kind='info') if document_issue else mo.callout('Documents read locally. Check these are your permitted texts.', kind='success'),
                mo.ui.table(documents, selection=None) if documents else mo.md('Add your documents; there is no hidden default corpus.')])
-    return documents, document_issue
+    return (documents,)
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    ## 2. Select the reranked evidence (7 min)
+    ## 2. Select the reranked evidence
     `rows` is a list of candidate dictionaries with `id`, `text`, `source`, `cosine`
     and `rerank_logit`. The supplied reranker scores every candidate. TODO 1 must
     order by `rerank_logit` (higher first) and return the first `keep` records,
@@ -72,20 +107,18 @@ def _(mo):
     return
 
 
-@app.cell
-def _():
-    def select_evidence(rows, keep):
-        # TODO 1: order candidate records by rerank_logit, then keep the requested count.
-        selected = None
-        # END TODO 1
-        return selected
-    return (select_evidence,)
+@app.function
+def select_evidence(rows, keep):
+    # TODO 1: order candidate records by rerank_logit, then keep the requested count.
+    selected = None
+    # END TODO 1
+    return selected
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    ## 3. Build traceable context (7 min)
+    ## 3. Build traceable context
     TODO 2 receives selected records and returns ONE string. Include each passage
     unchanged and prefix it with its exact ID inside square brackets: `[chunk ID]`.
     Separate passages with newlines. About 1–3 lines. This labels evidence for the
@@ -95,18 +128,16 @@ def _(mo):
     return
 
 
-@app.cell
-def _():
-    def build_context(selected):
-        # TODO 2: combine every [id] label with its unchanged passage text.
-        context = None
-        # END TODO 2
-        return context
-    return (build_context,)
+@app.function
+def build_context(selected):
+    # TODO 2: combine every [id] label with its unchanged passage text.
+    context = None
+    # END TODO 2
+    return context
 
 
 @app.cell(hide_code=True)
-def _(build_context, mo, select_evidence, validate_context, validate_selection):
+def _(mo, validate_context, validate_selection):
     _probe = [dict(id='shape-check:0-1', text='A shape-check passage.', rerank_logit=0.0, cosine=0.0, source='shape-check')]
     selection_ready = False
     context_ready = False
@@ -131,7 +162,21 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(answer, build_context, changed_size, chunk_documents, context_ready, documents, mo, questions, rerank, retrieve, run_rag, select_evidence, selection_ready, validate_context, validate_selection):
+def _(
+    answer,
+    changed_size,
+    chunk_documents,
+    context_ready,
+    documents,
+    mo,
+    questions,
+    rerank,
+    retrieve,
+    run_rag,
+    selection_ready,
+    validate_context,
+    validate_selection,
+):
     records = []
     run_issue = ''
     if run_rag.value:
@@ -182,22 +227,36 @@ def _(mo, records):
 def _(mo):
     judgments = mo.ui.array([mo.ui.text_area(label=f"{v} / Q{i}: supported / unsupported / uncertain? Does each citation exist and support its claim? Quote source words. For Q3 verify absence across ALL original documents.", full_width=True, debounce=False) for v in ['baseline','changed'] for i in [1,2,3]])
     findings = mo.ui.text_area(label="Explain one retrieval change, one generation failure (or limitation), and what you would fix next. Did the absent-answer request abstain or invent?", full_width=True, debounce=False)
-    mo.vstack([mo.md('## 5. Check and explain (8 min)\nA high cosine is not evidence that the answer exists. Reranking cannot recover a chunk absent from the candidates. Check Q3 in the original documents, not just top results. Keep failed outputs and explain retrieval versus generation failure.'),judgments,findings])
+    mo.vstack([mo.md('## 5. Check and explain \nA high cosine is not evidence that the answer exists. Reranking cannot recover a chunk absent from the candidates. Check Q3 in the original documents, not just top results. Keep failed outputs and explain retrieval versus generation failure.'),judgments,findings])
     return findings, judgments
 
 
 @app.cell(hide_code=True)
-def _(EMBED_MODEL, EMBED_REVISION, RERANK_MODEL, RERANK_REVISION, changed_size, documents, findings, json, judgments, mo, prediction, questions, records):
+def _(
+    EMBED_MODEL,
+    EMBED_REVISION,
+    RERANK_MODEL,
+    RERANK_REVISION,
+    changed_size,
+    documents,
+    findings,
+    json,
+    judgments,
+    mo,
+    prediction,
+    questions,
+    records,
+):
     _export = dict(format='edv-mini-rag-v1', embedding_model=EMBED_MODEL,embedding_revision=EMBED_REVISION,
                    rerank_model=RERANK_MODEL,rerank_revision=RERANK_REVISION,documents=documents,
                    questions=questions.value,prediction=prediction.value,changed_chunk_words=changed_size.value,
                    records=[dict(r,manual_judgment=j) for r,j in zip(records,judgments.value)], findings=findings.value)
-    mo.vstack([mo.md('## 6. Save and hand off (2 min)\nSave Python, then download results to preserve widget values. Share three baseline question/answer/source records, the absent-answer finding and the controlled comparison. The export keeps both configurations and full source text for Block 4 evaluation. Inspect it before sharing; store it locally. Return to slide 33.'),
+    mo.vstack([mo.md('## 6. Save and hand off \nSave Python, then download results to preserve widget values. Share three baseline question/answer/source records, the absent-answer finding and the controlled comparison. The export keeps both configurations and full source text for Block 4 evaluation. Inspect it before sharing; store it locally. Return to slide 33.'),
         mo.download(json.dumps(_export,indent=2).encode(),filename='results-day2-block2.json',label='Download questions, sources, rankings, raw answers and findings'),
         mo.accordion({'Hints and recovery':mo.md('Ordering and limiting a list are separate operations. Keep whole dictionaries, not just scores. Build one string, not a list. Python word counts differ from model tokens; shorten a text if context overflows. Missing model files: repeat online preflight. A failed call leaves an error record; it is not a measured answer. Export after reviewing the current run: changing settings clears reactive results. Smaller chunks need not improve relevance. Restart the launcher after saving; download preserves observations separately.')}),
         mo.md('Sources: [RAG paper](https://arxiv.org/abs/2005.11401), [Chroma](https://docs.trychroma.com/docs/collections/add-data), [embedding card](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2), [cross-encoder](https://huggingface.co/cross-encoder/ms-marco-TinyBERT-L2-v2).')])
     return
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run()

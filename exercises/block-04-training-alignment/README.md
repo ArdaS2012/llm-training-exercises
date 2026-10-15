@@ -1,6 +1,11 @@
 # Block 4 — Next-Token Loss & Learning
 
-Practice for Day 1, 14:45–15:05 (20 minutes, pairs). You will calculate a target's
+
+## Exercise + breakout
+
+Follow the [15-minute group task](GROUP_TASK.md) after guided setup.
+
+Practice for Day 1, 14:45–15:05 (guided setup, then 15-minute exercise + breakout). You will calculate a target's
 cross-entropy penalty, apply a parameter update, run a supplied tiny output-layer
 training loop, and explain how loss and target probability change.
 
@@ -22,11 +27,7 @@ The correct notebook is [04_next_token_learning.py](04_next_token_learning.py).
 If a browser does not open, visit http://127.0.0.1:2718. Both shared wrappers forward
 `--block 4`, `--check` and `--port`; use `--port 2720` for a port conflict.
 
-1. **Predict (2 min):** compare loss at target probabilities 0.25 and 0.5; predict zero-rate learning.
-2. **TODO 1 (5 min):** implement a single-target negative natural-log loss. Keep supplied validation.
-3. **TODO 2 (5 min):** swap editors and implement one scalar gradient-descent update. A provided loop applies it to all weights/biases.
-4. **Compare (5 min):** run the baseline, then change only rate or steps. Each run resets to the same parameters. Inspect the labelled loss plot, target table and zero-update case.
-5. **Record (3 min):** explain what changed and why, save code, download JSON findings and the SVG plot.
+Follow the [15-minute group task](GROUP_TASK.md) after guided setup.
 
 Show code with the cell's code control and rerun with Shift+Enter. Unfinished TODOs
 show waiting messages. Submit/share one probability-to-loss calculation, the two
@@ -46,10 +47,11 @@ inputs. No clipping is needed for the moderate default logits. If an aggressive 
 underflows a target probability, reduce it; full training libraries use log-softmax.
 Read the formulas and conceptual hints in the notebook before requesting help.
 
-**Verified course mapping:** continuous Day 1 slide 73, “Watch a tiny model learn in
-marimo”, launches this exercise; slide 74, “What changed when the loss fell?”, reviews
-it. Slides 65–67 teach targets, loss and parameter updates. These titles/numbers are
-trainer references; students do not need access to the private presentation/guide.
+Current handoff: LLM Day 1 slide 76, **Exercise: test a learning update**. The combined room task runs 14:50–15:05; setup/review are separate.
 
 References: [GPT-3 pretraining](https://arxiv.org/abs/2005.14165),
 [cross-entropy](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html).
+
+## Current teaching handoff
+
+LLM Day 1, Block 4: actual slide **76 — Exercise: test a learning update** launches the combined exercise + breakout. Return to plenary at the agenda’s room end. The notebook and group task are self-contained; private trainer files are not required.

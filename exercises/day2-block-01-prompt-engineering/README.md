@@ -2,7 +2,7 @@
 
 Compare zero-shot and few-shot extraction, system policy, a checkable reasoning
 example and JSON output checks. Two short TODOs build prompts; model loading,
-generation, widgets and format checks are supplied. Work in pairs for 35 minutes.
+generation, widgets and format checks are supplied. Work in pairs in breakout rooms for the 15-minute group task after guided setup.
 Prerequisites: Day 1 inference/context and basic Python lists/dictionaries.
 Read the [shared setup guide](../../README.md) first.
 
@@ -43,32 +43,9 @@ machine rather than promising every platform works. Prompt data stay on the
 local CPU; preflight requests model assets from Hugging Face. Use the supplied
 public toy texts, not confidential material.
 
-## Tasks and evidence
+## Exercise + breakout
 
-1. **Predict (3 min):** describe expected missing-field behavior and why JSON can
-   still be factually wrong.
-2. **TODO 1 (8 min):** return system/user messages; optionally insert the supplied
-   example user/assistant pair. Preserve the current document and system policy.
-   Run six calls: three documents × two variants.
-3. **Inspect (7 min):** compare the raw answers against every document. Record
-   correct / incorrect / uncertain with source words; count fully correct cases
-   out of three per variant. Inspect automatic schema flags separately. Save a
-   baseline export, then change only the policy and rerun. Record one failed case.
-4. **TODO 2 (8 min):** return a reasoning instruction, optionally including the
-   supplied worked demonstration. Predict the new arithmetic task on paper, run
-   both variants, and check steps and final count.
-5. **Compare/share (8 min):** explain the controlled change, case-level factual
-   judgments, schema validity and one limitation. Finish any missing observations.
-6. **Save (1 min):** save Python and download `results-day2-block1.json`. The export
-   contains actual prompts, raw outputs, format flags, timings/token counts and your
-   notes. Browser widget values are not preserved by saving Python alone.
-
-The comparison table provides automatic JSON/schema flags; you assess task
-correctness against the source. No factual score is silently inferred from fluency.
-Few-shot can help, do nothing or make output worse. This tiny model may fail every
-case; document that honestly. A rationale is generated text, not a truth certificate.
-The supplied helper uses ordinary greedy decoding, without constrained JSON decoding
-or automatic repair. Counts refer to this small fixed diagnostic set, not a benchmark.
+Follow the [15-minute group task](GROUP_TASK.md) after guided setup. It defines the required comparison, evidence and shared result. Keep the technical help below for the bounded TODOs.
 
 ## Help and course mapping
 
@@ -81,10 +58,8 @@ truncated; record it as a failure. Buttons bound model calls; no automatic paid 
 A fixed greedy configuration improves comparability but is not a cross-hardware
 bit-for-bit promise. The download includes all inputs: inspect it before sharing.
 
-Actual trainer map: Day 2 slides **9–14** teach the concepts, **15–16** are the
-breakout/debrief, **17 — Hands-on prompting starts now** launches this notebook,
-**18 — What changed in the measured answers?** reviews findings. Students need no
-private trainer files. Sources: [few-shot paper](https://arxiv.org/abs/2005.14165),
-[Chain-of-Thought paper](https://arxiv.org/abs/2201.11903),
-[chat templates](https://huggingface.co/docs/transformers/v4.57.1/en/chat_templating),
-[JSON Schema](https://json-schema.org/understanding-json-schema/reference/object).
+Current handoff: LLM Day 2 slide 17, **Exercise: test a prompt revision**. The combined room task runs 10:00–10:15; setup/review are separate.
+
+## Current teaching handoff
+
+LLM Day 2, Block 1: actual slide **17 — Exercise: test a prompt revision** launches the combined exercise + breakout. Return to plenary at the agenda’s room end. The notebook and group task are self-contained; private trainer files are not required.

@@ -53,6 +53,11 @@ jobs:
           uv run --locked --group rag python start.py --block d2-2 --check
           uv run --locked --group rag marimo check --strict exercises/day2-block-02-rag/02_mini_rag.py
           uv run --offline --locked --group rag python start.py --block d2-2 --offline-models --check
+      - name: Check Day 2 evaluation setup and notebook
+        run: |
+          uv run --locked python start.py --block d2-4 --check
+          uv run --locked marimo check --strict exercises/day2-block-04-evaluation/04_evaluation.py
+          uv run --offline --locked python start.py --block d2-4 --check
       - name: Student starter and setup checks
         run: uv run --locked python -m unittest discover -s tests -v
       - name: Verify cached launch without internet downloads

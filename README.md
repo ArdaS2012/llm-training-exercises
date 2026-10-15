@@ -1,5 +1,9 @@
 # LLM Training Exercises
 
+## Exercise + breakout
+
+Every supplied training exercise runs as a 15-minute pair task in breakout rooms after guided setup. Each block folder has a `GROUP_TASK.md` with the comparison, shared output and timebox; the same task is visible at the top of its notebook. Alternate editor/checker roles and bring evidence back to plenary. Blocks with no notebook exercise have no separate breakout task.
+
 Prepared marimo exercises for the LLM course, using one shared Python environment.
 This README covers repository access, installation, starting/stopping marimo and
 general troubleshooting. Learning goals and task instructions belong in each
@@ -34,6 +38,10 @@ If your organization's policy blocks the installer, use its approved installatio
 or the alternatives on that page. Administrator access is normally unnecessary.
 
 ### 2. Get your own exercise folder
+
+If your trainer supplied a course ZIP, extract that package and open a terminal in
+its `llm-training-exercises` folder. For Day 2, confirm the exercise index includes
+the prompting, Mini-RAG and evaluation blocks before class.
 
 If Git is already installed, run these commands in your terminal (same on all three systems):
 
@@ -90,6 +98,9 @@ block folder. Each folder contains its own notebook, tasks and task-specific hel
 | 2 — Tiny Attention Head | [Block 2 README](exercises/block-02-self-attention/README.md) |
 | 3 — Causal Masking & Sampling | [Block 3 README](exercises/block-03-transformer-architecture/README.md) |
 | 4 — Next-Token Loss & Learning | [Block 4 README](exercises/block-04-training-alignment/README.md) |
+| Day 2 · 1 — Prompt Engineering (`d2-1`) | [Prompting README](exercises/day2-block-01-prompt-engineering/README.md) |
+| Day 2 · 2 — Mini-RAG (`d2-2`) | [Mini-RAG README](exercises/day2-block-02-rag/README.md) |
+| Day 2 · 4 — Evaluation (`d2-4`) | [Evaluation README](exercises/day2-block-04-evaluation/README.md) |
 
 Block 1 remains the default. Choose Block 2 with `uv run --locked python start.py --block 2`, or Block 3 with `uv run --locked python start.py --block 3`.
 Run its pre-class check with `uv run --locked python start.py --block 3 --check`;
@@ -177,3 +188,28 @@ Use `--offline-models` after preflight to prohibit model downloads.
 ## Day 2 Block 2 — Mini-RAG
 
 [Mini-RAG instructions](exercises/day2-block-02-rag/README.md) — two TODOs, own documents, real Chroma/embedding/reranker/generator, source judgments and JSON handoff. Prepare with `uv sync --locked --group rag`; select `uv run --locked --group rag python start.py --block d2-2`. Day 1 default is preserved.
+
+### Day 2 evaluation
+
+[Block 4 evaluation](exercises/day2-block-04-evaluation/README.md) is included: `uv run --locked python start.py --block d2-4`. Automatic scoring needs no model assets; actual judging reuses `--group prompting` and the cached prompting model. See the block README for preflight.
+
+## Prepare all LLM exercises before class
+
+Day 1 needs only the base setup above. For both days, run these once while online;
+the `rag` group also includes the prompting and evaluation-judge dependencies:
+
+```sh
+uv sync --locked --group rag
+uv run --locked --group rag python start.py --check
+uv run --locked --group rag python start.py --block d2-1 --check
+uv run --locked --group rag python start.py --block d2-2 --check
+uv run --locked --group rag python start.py --block d2-4 --check
+```
+
+Allow model downloads and first warm-up to finish before class. Then confirm the
+cache with the same commands using `uv run --offline` and, for `d2-1`/`d2-2`,
+`--offline-models`. To open an exercise, omit `--check`. Keep `--group rag` for
+Day 2 if you prepared this combined environment, including `d2-4` for the judge.
+The per-block README and `GROUP_TASK.md` explain the work: predict, edit the short
+TODOs, compare one controlled change, explain the evidence, save code and download
+findings. Fresh starters intentionally show waiting messages.

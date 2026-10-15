@@ -10,7 +10,7 @@ from llm_exercises.block1 import ENCODING_NAME, EXAMPLES, load_tokenizer
 
 def main():
     parser = argparse.ArgumentParser(description="Open a prepared marimo exercise.")
-    parser.add_argument("--block", choices=["1", "2", "3", "4", "d2-1", "d2-2"], default="1", help="Exercise block (default: 1).")
+    parser.add_argument("--block", choices=["1", "2", "3", "4", "d2-1", "d2-2", "d2-4"], default="1", help="Exercise block (default: 1).")
     parser.add_argument("--check", action="store_true", help="Verify selected exercise setup without opening a browser.")
     parser.add_argument("--port", type=int, default=2718, help="Local notebook port (default: 2718).")
     parser.add_argument("--offline-models", action="store_true", help="Use cached Day 2 model files only; prohibit model downloads.")
@@ -36,6 +36,11 @@ def main():
             assert len(SCORES) == 3 and len(LOGITS) == 4
             assert abs(sum(row_softmax(SCORES[0])) - 1) < 1e-9
             print(f"Ready: Block 3, Python {sys.version.split()[0]}, marimo {marimo.__version__}. Local toy data; no assets or API key needed.")
+        elif args.block == "d2-4":
+            from llm_exercises.evaluation import cases, parse_output
+            assert len(cases()) == 12
+            assert parse_output(cases()[0]["raw_output"])["schema_valid"]
+            print("Ready: evaluation fixtures and import/scoring plumbing; no model download. Judge needs the optional prompting group and its cached model.")
         elif args.block == "d2-2":
             from llm_exercises.rag import preflight
             report = preflight(online=not args.offline_models)
@@ -57,7 +62,7 @@ def main():
     if args.check:
         print("Setup check passed. You can now work offline on this computer.")
         return 0
-    notebooks = {"d2-2": "day2-block-02-rag/02_mini_rag.py", "d2-1": "day2-block-01-prompt-engineering/01_prompt_engineering.py", "2": "block-02-self-attention/02_self_attention.py", "1": "block-01-tokenization-context/01_tokenization_context.py", "3": "block-03-transformer-architecture/03_masking_sampling.py", "4": "block-04-training-alignment/04_next_token_learning.py"}
+    notebooks = {"d2-4": "day2-block-04-evaluation/04_evaluation.py", "d2-2": "day2-block-02-rag/02_mini_rag.py", "d2-1": "day2-block-01-prompt-engineering/01_prompt_engineering.py", "2": "block-02-self-attention/02_self_attention.py", "1": "block-01-tokenization-context/01_tokenization_context.py", "3": "block-03-transformer-architecture/03_masking_sampling.py", "4": "block-04-training-alignment/04_next_token_learning.py"}
     print(f"Opening the editor at http://127.0.0.1:{args.port}. Keep this terminal open; Ctrl+C stops it.", flush=True)
     try:
         return subprocess.call(

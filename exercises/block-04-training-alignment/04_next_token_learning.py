@@ -1,7 +1,10 @@
 import marimo
 
 __generated_with = "0.25.1"
-app = marimo.App(width="medium", app_title="Next-Token Loss & Learning · Block 4")
+app = marimo.App(
+    width="medium",
+    app_title="Next-Token Loss & Learning · Block 4",
+)
 
 
 @app.cell(hide_code=True)
@@ -16,17 +19,49 @@ def _():
     from llm_exercises.block4 import (
         PREFIXES, VOCABULARY, FEATURES, TARGETS, check_loss, check_update, train, loss_plot,
     )
-    return FEATURES, PREFIXES, TARGETS, VOCABULARY, check_loss, check_update, json, loss_plot, mo, train
+
+    return (
+        FEATURES,
+        PREFIXES,
+        TARGETS,
+        VOCABULARY,
+        check_loss,
+        check_update,
+        json,
+        loss_plot,
+        mo,
+        train,
+    )
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Exercise + breakout: your shared task
+
+    **15 minutes in pairs after guided setup.** Connect negative-log loss, gradient descent and a control experiment to evidence of learning.
+
+    1. Predict the ordering of loss for target probabilities 0.25 and 0.5. Complete both bounded TODOs and check one scalar parameter update by hand.
+
+    2. Run rate 0.5 for 40 updates. Record before/after target probability and loss. Repeat with rate 0 and the same update count, keeping everything else fixed.
+
+    3. Compare W/b changes across the two runs. Explain why lower training loss cannot establish factual accuracy, alignment or generalization; specify one additional evaluation you would need.
+
+    **Bring back:** One checked loss/update calculation, measured baseline/zero-rate comparison and a stated evaluation limit.
+
+    Swap editor/checker halfway. Record in the observation fields, save code and download findings. The complete task and setup are in this block’s `GROUP_TASK.md`. Prerequisite TODOs discussed in plenary belong to setup.
+    """)
+    return
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
     # Next-Token Loss & Learning
-    **Block 4 · Day 1 slide 73: Watch a tiny model learn in marimo**
+    **Block 4 · Day 1 slide 76: Watch a tiny model learn in marimo**
 
     Predict → complete two short TODOs → run → change one setting → explain → download.
-    Work in pairs for 20 minutes; swap editors before the second TODO.
+    Work in pairs for 15-minute group task after guided setup; swap editors before the second TODO.
     Show a TODO cell's code, replace `None`, and run with **Shift+Enter**.
     Waiting messages are normal. Keep function names and return lines.
     This trains a tiny output layer on local toy data, with fixed features;
@@ -38,7 +73,7 @@ def _(mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    prediction = mo.ui.text_area(label="Predict (2 minutes): which target probability has greater loss, 0.25 or 0.5? What should zero learning rate do?", full_width=True, debounce=False)
+    prediction = mo.ui.text_area(label="Predict : which target probability has greater loss, 0.25 or 0.5? What should zero learning rate do?", full_width=True, debounce=False)
     prediction
     return (prediction,)
 
@@ -47,7 +82,7 @@ def _(mo):
 def _(FEATURES, PREFIXES, TARGETS, VOCABULARY, mo):
     mo.vstack([
         mo.md(r"""
-        ## 1. Calculate a target-token loss (5 minutes)
+        ## 1. Calculate a target-token loss
         Vocabulary has four illustrative whole-word tokens. Rows are independent toy
         contexts; the identity feature table is supplied, not learned embeddings.
         H has shape 3 × 3, W has shape 3 × 4 and b has shape (4,).
@@ -90,7 +125,7 @@ def _(check_loss, mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md(r"""
-    ## 2. Apply a parameter update (5 minutes)
+    ## 2. Apply a parameter update
     Swap editors. Gradient descent is $\theta_{k+1}=\theta_k-\eta g_k$.
     θ is one trainable number, η is the learning rate, and g is its loss derivative.
     Complete `update_parameter` with one scalar operation. The supplied loop calls
@@ -125,7 +160,7 @@ def _(mo):
     learning_rate = mo.ui.number(start=0, stop=100, value=0.5, step=0.1, label="Learning rate η")
     update_count = mo.ui.number(start=0, stop=200, value=40, step=1, label="Number of updates")
     interpretation = mo.ui.text_area(label="Record: baseline vs changed rate/steps, target probability/loss, which parameters changed, one limit", full_width=True, debounce=False)
-    mo.vstack([mo.md("## 3. Run a controlled comparison (5 minutes)\nEach run starts from the same zero W,b. The baseline is η=0.5 and 40 updates; change only one setting. Try η=0 or zero updates, then restore. A very large η can cause overshoot; check the measured curve rather than assuming monotonicity. Explain the probability/loss relationship, and why this does not establish quality on unseen contexts."), learning_rate, update_count, interpretation])
+    mo.vstack([mo.md("## 3. Run a controlled comparison \nEach run starts from the same zero W,b. The baseline is η=0.5 and 40 updates; change only one setting. Try η=0 or zero updates, then restore. A very large η can cause overshoot; check the measured curve rather than assuming monotonicity. Explain the probability/loss relationship, and why this does not establish quality on unseen contexts."), learning_rate, update_count, interpretation])
     return interpretation, learning_rate, update_count
 
 
@@ -144,12 +179,24 @@ def _(learning_rate, loss_ok, loss_plot, mo, train, update_count, update_ok):
 
 
 @app.cell(hide_code=True)
-def _(baseline, interpretation, json, learning_rate, loss_ok, mo, plot_svg, prediction, run_result, update_count, update_ok):
+def _(
+    baseline,
+    interpretation,
+    json,
+    learning_rate,
+    loss_ok,
+    mo,
+    plot_svg,
+    prediction,
+    run_result,
+    update_count,
+    update_ok,
+):
     _report = dict(prediction=prediction.value, interpretation=interpretation.value,
                    rate=learning_rate.value, steps=update_count.value,
                    checks=dict(loss=loss_ok, update=update_ok), baseline=baseline, selected=run_result)
     mo.vstack([
-        mo.md("## 4. Save and share (3 minutes)\nSave code with Ctrl+S / Cmd+S. Download findings because widget inputs are not saved in Python. Share one target calculation, the baseline/controlled curve and an explanation at slide 74, **What changed when the loss fell?** The export includes measured probabilities, W,b and both runs, plus your notes; it does not export function source."),
+        mo.md("## 4. Save and share \nSave code with Ctrl+S / Cmd+S. Download findings because widget inputs are not saved in Python. Share one target calculation, the baseline/controlled curve and an explanation at slide 74, **What changed when the loss fell?** The export includes measured probabilities, W,b and both runs, plus your notes; it does not export function source."),
         mo.download(json.dumps(_report, indent=2).encode(), filename="results-block4.json", label="Download findings and measured runs"),
         mo.download(plot_svg.encode(), filename="training-loss.svg", label="Save loss plot") if plot_svg else mo.md("Plot download becomes available after both TODOs."),
         mo.accordion({"Hints and troubleshooting": mo.md("Loss: identify the target's probability, use a natural log and consider its sign. Update: move opposite the derivative and scale by the learning rate. Zero rate should preserve all parameters. If a cell turns red, undo and check indentation/return values. The loop, softmax and gradients are supplied in llm_exercises/block4.py. Read them after finishing if useful; neither TODO is solved there. A falling training curve says nothing yet about held-out data.")}),
