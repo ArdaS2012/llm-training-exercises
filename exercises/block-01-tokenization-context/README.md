@@ -18,11 +18,27 @@ The default launcher without `--block` also opens Block 1. Keep the terminal ope
 
 Follow the [15-minute pair task](GROUP_TASK.md). Guided setup happens before rooms open. Alternate editor/checker roles.
 
+### Start with a tiny example
+
+Suppose the complete training text is **`cat cat car`**. It contains two copies of
+`cat` and one copy of `car`. Python stores those quantities in
+`frequencies = {"cat": 2, "car": 1}`. The other input, `splits`, stores each word's
+current pieces: `cat` starts as `["c", "a", "t"]` and `car` as `["c", "a", "r"]`.
+
+TODO 1 counts pieces that appear next to each other. `c` followed by `a` occurs
+in both copies of `cat` and the one copy of `car`: **three times altogether**.
+The notebook shows the other counts in a contribution table before asking you
+to write code. It also displays every repeated word in the main training corpus.
+All training text is supplied; each function call receives the information it needs.
+Small automatic checks each supply their own separate example corpus.
+
+### Implement the two steps
+
 The notebook contains two marked functions:
 
 | Task | Supplied input | Your output | Purpose |
 |---|---|---|---|
-| TODO 1: `count_pairs` | Word → current tokens; word → frequency | Dictionary: two-token tuple → weighted occurrence count | Decide which neighbouring pieces are frequent in the training corpus |
+| TODO 1: `count_pairs` | Each word's current pieces and how often the word appears | Pair → how often those neighbours appear across all word copies | Find common neighbouring pieces |
 | TODO 2: `merge_pair` | One token list and the selected pair | New list after one non-overlapping merge pass | Construct the next tokenization without losing text or changing the original |
 
 Each task explains its boundary rules in the notebook. Implement about 5–8 and 8–12 lines respectively inside the marked regions; keep the function names and return lines. Show the cell's code, edit, then run with **Shift+Enter**. Later displays update automatically. A waiting message is expected in the untouched starter. Each TODO has independent feedback and a folded conceptual prompt; neither needs the other to pass.

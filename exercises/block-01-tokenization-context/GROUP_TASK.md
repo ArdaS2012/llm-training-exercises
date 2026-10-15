@@ -14,6 +14,13 @@ uv run --locked python start.py --block 1
 
 Inspect the corpus table and the two function interfaces together. You need basic Python loops, dictionaries, lists and tuple keys. All other code is supplied. Show where to edit/run a cell and record predictions; leave the BPE implementation for the room. Downloading the real-tokenizer asset happens during setup.
 
+**Start with the notebook's `cat cat car` example.** Read the whole training text
+first, then the table: `cat` appears twice and `car` once. `frequencies` stores
+these quantities; `splits` shows the pieces of each word. Follow how the table
+adds each word's contribution to one neighbouring-pair count. No code is needed
+for this walkthrough. The main exercise uses the separate corpus displayed at
+the start of the notebook. All its training words are already supplied.
+
 ## Your task
 
 1. **Predict a merge.** Each corpus entry gives a word and how often it occurs. Tokens initially are characters. Predict the most frequent adjacent pair and justify it using contributions from at least two words. Record your prediction before completing TODO 1.

@@ -17,12 +17,15 @@ BPE_PROBES = ("maps", "rap")
 def check_pairs(count_pairs):
     """Small behavioral checks, without a reference counting implementation."""
     cases = [
-        ({"xy": ["x", "y"], "xyz": ["x", "y", "z"]}, {"xy": 2, "xyz": 3},
-         {("x", "y"): 5, ("y", "z"): 3}, "Weight each occurrence by its word frequency."),
-        ({"aaa": ["a", "a", "a"]}, {"aaa": 3}, {("a", "a"): 6},
-         "Count adjacent positions, including overlapping pairs during counting."),
-        ({"xy": ["xy"], "z": ["z"], "": []}, {"xy": 2, "z": 1, "": 1}, {},
-         "Inspect current tokens, not characters inside a merged token. Never cross words."),
+        ({"cat": ["c", "a", "t"], "car": ["c", "a", "r"]}, {"cat": 2, "car": 1},
+         {("c", "a"): 3, ("a", "t"): 2, ("a", "r"): 1},
+         "Check the cat cat car example above: include the pairs from every copy of each word."),
+        ({"shhh": ["s", "h", "h", "h"]}, {"shhh": 3}, {("s", "h"): 3, ("h", "h"): 6},
+         "In each shhh, check s–h, then h–h, then h–h. Its frequency tells you how many copies there are."),
+        ({"cat": ["cat"], "a": ["a"], "": []}, {"cat": 2, "a": 1, "": 1}, {},
+         "A word stored as one token has no neighbouring pair. Empty lists also contribute none."),
+        ({"cats": ["ca", "t", "s"]}, {"cats": 2}, {("ca", "t"): 2, ("t", "s"): 2},
+         "Use the pieces in splits: ca is already one token in this check. See the folded special cases."),
     ]
     try:
         from copy import deepcopy

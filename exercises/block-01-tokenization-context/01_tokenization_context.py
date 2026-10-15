@@ -57,10 +57,14 @@ def _(BPE_CORPUS, mo):
         mo.md("""
         ## 1. Understand the experiment and predict
 
-        A **corpus** is training text. Here we store each distinct word with how
-        often it occurs: frequency 8 means eight copies, not eight letters.
-        **Tokens** start as individual characters. A **pair** is two adjacent
-        current tokens inside one word; it may contain longer pieces after a merge.
+        **The training text is already supplied.** A collection of training text
+        is called a **corpus**. Below you can see every word in our tiny corpus,
+        including repeated copies. You do not need to find or load another dataset.
+
+        The table stores the same text more compactly: a row with `map` and 8
+        means that `map` appears eight times. The last column shows the pieces
+        we currently use to write that word. Each piece is a **token**. Initially,
+        each letter is its own token. A **pair** is two tokens next to each other.
 
         In each training round, the supplied loop asks your functions to count
         pairs and merge the most frequent one throughout the corpus. It then
@@ -71,8 +75,11 @@ def _(BPE_CORPUS, mo):
         separated, merges never cross words, and there is no whitespace handling,
         byte fallback or special-token format. It trains a tokenizer, not an LLM.
         """),
+        mo.md("**Our complete training text (repeated words included):**\n\n" +
+              "\n\n".join("`" + " ".join([_word] * _freq) + "`"
+                            for _word, _freq in BPE_CORPUS.items())),
         mo.ui.table([
-            {"Word": _word, "Frequency": _freq, "Starting tokens": list(_word)}
+            {"Word": _word, "How many copies?": _freq, "Current tokens (at the start)": list(_word)}
             for _word, _freq in BPE_CORPUS.items()
         ], selection=None),
     ])
@@ -93,23 +100,68 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    ## 2. TODO 1 — Count the pairs that BPE can merge
+    ## 2. TODO 1 — Count which pieces appear next to each other
 
-    Implement `count_pairs(splits, frequencies)` in about **5–8 lines**.
+    BPE needs to know which neighbouring pieces occur most often. Your function
+    supplies these counts. First, follow this small example, separate from the
+    main training text above.
 
-    - **Inputs:** `splits` maps each word to its *current* list of tokens;
-      `frequencies` maps the same words to occurrence counts. For example,
-      `{"mint": ["mi", "n", "t"]}` describes three tokens, with `"mi"` already merged.
-    - **Return:** a dictionary whose keys are two-token tuples and whose values are
-      total occurrence counts across the corpus. Include only pairs that occur.
-    - Count every adjacent position within each word, weighted by that word's
-      frequency. Repeated neighbours contribute at each position, including overlaps
-      during **counting**. Leave both input dictionaries and their lists unchanged.
-      Empty lists and single tokens contribute no pairs.
+    **Imagine this is all our training text:**
 
-    The trainer supplies pair selection and all three training rounds. Your job is
-    to supply accurate statistics; you do not need sorting or a training loop here.
-    A passed check unlocks your initial frequency table.
+    ```text
+    cat cat car
+    ```
+
+    Look at each copy separately:
+
+    | Word in the text | Its current pieces | Which pieces are next to each other? |
+    |---|---|---|
+    | First cat | `c`, `a`, `t` | `c` then `a`; `a` then `t` |
+    | Second cat | `c`, `a`, `t` | `c` then `a`; `a` then `t` |
+    | The car | `c`, `a`, `r` | `c` then `a`; `a` then `r` |
+
+    In **each copy** of `cat`, `c` is followed by `a`, and `a` is followed by `t`.
+    There are two copies, so each of these pairs occurs twice. The one copy of
+    `car` adds another `c` followed by `a`, plus one `a` followed by `r`.
+
+    | Neighbours | From the two copies of cat | From the one copy of car | Total |
+    |---|---|---|---|
+    | `c` then `a` | 2 | 1 | 3 |
+    | `a` then `t` | 2 | 0 | 2 |
+    | `a` then `r` | 0 | 1 | 1 |
+
+    **How does your function receive that training text?** Python stores the
+    same information in two dictionaries:
+
+    ```python
+    frequencies = {"cat": 2, "car": 1}  # How many copies of each word?
+    splits = {                         # Each word's current pieces
+        "cat": ["c", "a", "t"],
+        "car": ["c", "a", "r"],
+    }
+    ```
+
+    **For this small example, your function would return:**
+
+    ```python
+    {("c", "a"): 3, ("a", "t"): 2, ("a", "r"): 1}
+    ```
+
+    `("c", "a")` names a pair; `3` says how often it occurs across all word copies.
+    This is what **weighted pair counting** means: a word that occurs twice
+    contributes its pairs twice.
+
+    **Now implement `count_pairs(splits, frequencies)` in the next cell.** Use the
+    dictionaries passed into the function. The supplied code calls it with the
+    main corpus and with separate small examples that check your work. Each call
+    supplies all the words and frequencies you need for that call.
+
+    Return a dictionary of neighbouring-token pairs and their total counts. Keep
+    the input dictionaries and lists unchanged. Count inside each word; no pair
+    crosses from the end of one word to the beginning of another.
+
+    The supplied training loop uses your counts to choose a merge. A passed check
+    unlocks your initial pair table. You only implement counting in this TODO.
     """)
     return
 
@@ -124,11 +176,16 @@ def count_pairs(splits, frequencies):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.accordion({"Optional concept check for TODO 1": mo.md(
-        "Does your result describe neighbours in the current token list, or letters "
-        "inside a token that was already merged? How many copies of each word does "
-        "one dictionary entry represent?"
-    )})
+    mo.accordion({"After the cat example: two special cases to handle": mo.md("""
+        **A piece may contain several letters.** After a merge, `cat` might be
+        represented as `["ca", "t"]`. There are two tokens, with one neighbouring
+        pair: `("ca", "t")`. If it is `["cat"]`, there is just one token and no pair.
+        An empty list also has no pair. Use the current list in `splits` each time.
+
+        **Check every neighbouring position.** In `["s", "h", "h", "h"]` (`shhh`),
+        the neighbours are `s–h`, `h–h`, `h–h`. The middle letters can belong to
+        two candidate pairs while you count. Applying a merge happens in TODO 2.
+        """)})
     return
 
 
@@ -174,6 +231,10 @@ def _(mo):
     This function applies **one given rule**; it does not select a pair or train
     new rules. The supplied loop handles that. Use whole token strings, not a
     replacement on the reconstructed word: token boundaries matter.
+
+    **Small example:** given `["c", "a", "t"]` and the selected pair `("c", "a")`,
+    return `["ca", "t"]`. The letters stay the same; two neighbouring pieces
+    have become one piece.
     """)
     return
 
