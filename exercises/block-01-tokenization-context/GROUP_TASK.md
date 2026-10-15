@@ -1,29 +1,32 @@
-# Exercise: tokens and context budget
+# Exercise: learn and test BPE merges
 
 **Exercise + breakout · LLM Day 1 Block 1 · 15 minutes in pairs**
 
-Learning goal: Use token measurements and boundary tests to defend a context-budget decision.
+Learning goal: explain how corpus frequencies produce BPE merge rules, and distinguish learning those rules from applying them to new text.
 
-## Before the room opens
+## Before rooms open
 
-Open the starter and inspect its two TODO interfaces, encoding identity and full-sequence decode. Keep the supplied English, German and code strings. Demonstrate where to record predictions without giving their ranking.
+Complete the [shared setup](../../README.md) and open the notebook from the repository root:
 
-Use the [shared setup](../../README.md); model downloads and launch checks happen before the task. Start from the repository root with `uv run --locked python start.py --block 1`. Keep the starter open. Prerequisite TODOs discussed in plenary belong to setup; the task below is the room assignment.
+```sh
+uv run --locked python start.py --block 1
+```
 
-## Your group task
+Inspect the corpus table and the two function interfaces together. You need basic Python loops, dictionaries, lists and tuple keys. All other code is supplied. Show where to edit/run a cell and record predictions; leave the BPE implementation for the room. Downloading the real-tokenizer asset happens during setup.
 
-1. Before measuring, rank the three supplied texts and justify one boundary prediction. Complete the encoding/count TODO and compare IDs, pieces and counts.
+## Your task
 
-2. Choose one text and change only a leading space, punctuation mark or word. Preserve the baseline; explain the changed pieces/count, including a result with unchanged count if that occurs.
-
-3. Complete the context-budget TODO. Test input 3000, reserve 2000, limit 4000; revise exactly one quantity to fit. Test 6000+2000 with limit 8000 and justify your boundary decision.
+1. **Predict a merge.** Each corpus entry gives a word and how often it occurs. Tokens initially are characters. Predict the most frequent adjacent pair and justify it using contributions from at least two words. Record your prediction before completing TODO 1.
+2. **Build the two BPE steps.** In TODO 1, return weighted pair frequencies from the current token lists. In TODO 2, return a new list after applying one selected merge left to right without overlaps. Read the notebook's input/output contracts and boundary rules. The supplied trainer selects the winning pair, recounts and runs three rounds. Use the feedback, then explain one change between successive rounds.
+3. **Change one training frequency.** Keep the baseline. Predict what will happen when only `can` changes from frequency 10 to 20; then run that change. Compare the merge order and the final pieces for `maps`. Give a frequency-based explanation for one changed choice. Predict how each trained tokenizer splits the unseen word `rap`, then reveal the results. Explain why encoding this new word does not retrain the tokenizer.
+4. **Connect to context.** Open the prepared real-tokenizer/context section. Choose one change that makes the supplied request fit, state its tradeoff, and explain why this toy does not establish a real model's speed or answer quality. No extra coding is needed.
 
 ## Bring back
 
-Three-text measurement table, one controlled-edit comparison, overflow and exact-fit checks, and a justified budget revision in the findings export.
+Download one findings file containing your prediction, both three-round traces, the probe-word comparison, and your shared explanation. State one limitation of the character-based toy. Include the context decision in the conclusion field. Both partners should be able to explain the result; swap editor/checker halfway.
 
-Use the notebook’s prediction/observation fields. Save the Python source and download findings to retain browser inputs and measurements. Both partners should be able to explain the conclusion; swap editor/checker around halfway. If you finish early, state a competing explanation and a new controlled test that would distinguish it.
+Save Python code as well: saving the notebook does not preserve browser text fields. If blocked, open a folded concept check or ask for a room visit. Honest unchanged results count as evidence when explained.
 
-## Work within the timebox
+## Timebox
 
-2 minutes to predict and agree; 7 to implement and compare; 4 to diagnose and defend; 2 to record/export. Ask for help through the trainer’s chat/room-visit route if blocked. Return to plenary for review and the scheduled quiz. Honest unchanged or failed results count as evidence when they are explained; do not invent measurements.
+2 minutes to predict, 7 to implement, 4 to compare/explain, 2 to record/export. Return at the trainer's announced time. If you finish early, predict one further merge and justify it before testing.

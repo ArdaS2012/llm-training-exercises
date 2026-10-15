@@ -5,7 +5,7 @@ import importlib.util
 import unittest
 from unittest.mock import patch
 
-from llm_exercises.block1 import ROOT, check_budget, check_inspect, load_tokenizer
+from llm_exercises.block1 import ROOT, check_merge, check_pairs, load_tokenizer, train_bpe, apply_bpe
 
 NOTEBOOK = ROOT / "exercises" / "block-01-tokenization-context" / "01_tokenization_context.py"
 
@@ -25,16 +25,41 @@ class StudentStarterChecks(unittest.TestCase):
         cls.tokenizer = load_tokenizer()
 
     def test_starter_has_friendly_waiting_feedback(self):
-        ok, message = check_inspect(student_function("inspect_text"), self.tokenizer)
+        ok, message = check_pairs(student_function("count_pairs"))
         self.assertFalse(ok)
         self.assertIn("waiting", message)
-        ok, message = check_budget(student_function("context_budget"))
+        ok, message = check_merge(student_function("merge_pair"))
         self.assertFalse(ok)
         self.assertIn("waiting", message)
 
     def test_feedback_handles_invalid_return_values(self):
-        self.assertFalse(check_inspect(lambda *_: 3, self.tokenizer)[0])
-        self.assertFalse(check_budget(lambda *_: 3)[0])
+        self.assertFalse(check_pairs(lambda *_: 3)[0])
+        self.assertFalse(check_merge(lambda *_: 3)[0])
+
+    def test_feedback_rejects_unweighted_or_empty_results(self):
+        self.assertFalse(check_pairs(lambda *_: {})[0])
+        self.assertFalse(check_merge(lambda tokens, pair: tokens)[0])
+
+    def test_training_supplies_recounting_and_deterministic_tie_order(self):
+        # Stubs exercise orchestration only; neither implements a student TODO.
+        calls = []
+        def supplied_counts(splits, frequencies):
+            calls.append(splits)
+            return {("z", "x"): 2, ("a", "b"): 2} if len(calls) == 1 else {}
+        result = train_bpe({"z": 1}, supplied_counts, lambda tokens, pair: tokens.copy())
+        self.assertEqual(result["merges"], [("a", "b")])
+        self.assertEqual(len(calls), 2)
+
+    def test_encoding_uses_rules_without_training_or_accepting_unknown_symbols(self):
+        seen = []
+        def supplied_merge(tokens, pair):
+            seen.append(pair)
+            return tokens.copy()
+        rules = [("a", "b"), ("b", "c")]
+        self.assertEqual(apply_bpe("abc", rules, supplied_merge, "abc"), list("abc"))
+        self.assertEqual(seen, rules)
+        with self.assertRaises(ValueError):
+            apply_bpe("d", rules, supplied_merge, "abc")
 
     def test_tokenizer_reloads_from_cache_without_network(self):
         import tiktoken.registry

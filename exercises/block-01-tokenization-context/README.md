@@ -1,94 +1,71 @@
-# Block 1 — Tokenization & Context
+# Block 1 — BPE Detective: build a tiny tokenizer
 
-Record predictions in the combined exercise + breakout to compare English, German and code. Inspect
-how text becomes token IDs, then calculate whether input and an answer reserve fit
-within a teaching context limit.
+Learn the mechanism behind tokenization: count neighbouring token pairs, merge a selected pair, and inspect three rounds of BPE training. Change one training frequency and compare the learned rules on the same words, including a word absent from training.
 
-**Prerequisites:** basic Python and the [shared environment setup](../../README.md).
-Work with a partner; swap who edits and who predicts/checks midway through the exercise.
-The group task is 15 minutes inside the agenda’s setup/practice/review allocation.
+**Prerequisites:** basic Python loops, lists, dictionaries and tuples; the [shared setup](../../README.md). No API key, GPU or LLM is required. First setup caches the small tiktoken asset for the prepared comparison section.
 
-## Open this block
+## Open the exercise
 
 From the **repository root**, run:
 
 ```sh
-uv run --locked python start.py
+uv run --locked python start.py --block 1
 ```
 
-The launcher opens [01_tokenization_context.py](01_tokenization_context.py) in marimo.
-Keep the terminal open. To launch the notebook directly from the root after the
-setup check, you can also use:
+The default launcher without `--block` also opens Block 1. Keep the terminal open. The editable starter is [01_tokenization_context.py](01_tokenization_context.py).
 
-```sh
-uv run --locked marimo edit exercises/block-01-tokenization-context/01_tokenization_context.py
-```
+## What you do
 
-If your terminal is already in this block folder, return to the root with `cd ../..`.
-The notebook's setup, examples and display cells are prepared. You only need to edit
-the two marked `# TODO` areas first. A **waiting** message on opening is expected.
+Follow the [15-minute pair task](GROUP_TASK.md). Guided setup happens before rooms open. Alternate editor/checker roles.
 
-## Exercise + breakout
+The notebook contains two marked functions:
 
-Follow the [15-minute group task](GROUP_TASK.md) after guided setup. It defines the required comparison, evidence and shared result. Keep the technical help below for the bounded TODOs.
+| Task | Supplied input | Your output | Purpose |
+|---|---|---|---|
+| TODO 1: `count_pairs` | Word → current tokens; word → frequency | Dictionary: two-token tuple → weighted occurrence count | Decide which neighbouring pieces are frequent in the training corpus |
+| TODO 2: `merge_pair` | One token list and the selected pair | New list after one non-overlapping merge pass | Construct the next tokenization without losing text or changing the original |
 
-## Optional extension — Count a formatted request
+Each task explains its boundary rules in the notebook. Implement about 5–8 and 8–12 lines respectively inside the marked regions; keep the function names and return lines. Show the cell's code, edit, then run with **Shift+Enter**. Later displays update automatically. A waiting message is expected in the untouched starter. Each TODO has independent feedback and a folded conceptual prompt; neither needs the other to pass.
 
-Open the optional request section and compare counting the current question alone
-with counting instructions, history, documents and question together. Then inspect
-the count with the supplied teaching role labels and separators included.
+The supplied code selects pairs, resolves ties alphabetically, runs three rounds, displays traces and applies learned rules to probe words. Your implementation does the counting and merging. Record a prediction before revealing outputs. Change only `can`'s frequency from 10 to 20, preserve the baseline and explain a changed choice using counts. Compare the same probe words across both runs; raw corpus totals are not directly comparable when the corpus size changes.
 
-The labels are a **toy format**, not a real model's chat template. Separately encoded
-components need not add exactly because boundaries affect tokenization. Use the
-target model's actual template and accounting for real requests.
+## Transfer and limitations
 
-## What the experiment demonstrates
+Open the prepared real-tokenizer/context section after the BPE experiment. It includes English/German/code measurements with **tiktoken / cl100k_base** and a context decision. There is no arithmetic TODO: use the prepared result to choose a tradeoff.
 
-The selected tokenizer is **tiktoken / cl100k_base**, a concrete BPE example. The
-vocabulary catalogue size differs from your sequence length and a context-window
-limit. Token IDs identify entries; they are not embedding vectors or importance scores.
-SentencePiece is a separate toolkit supporting BPE and Unigram; this exercise does
-not train either a tokenizer or an LLM.
+The toy starts with characters, separates words in advance and omits whitespace processing, byte fallback and special tokens. New probe words must use the training alphabet. It trains a tokenizer, not an LLM. The fixed real encoding is separate from your learned toy rules. Vocabulary size, sequence length and context capacity are different quantities. SentencePiece is a toolkit supporting BPE and Unigram; this exercise does not implement Unigram.
 
-The context limits and cost rates are hypothetical teaching values. Reserving output
-space does not mean actually generating or billing that amount. The following slide
-debrief connects your counts to cost and performance. This notebook measures tokens,
-not LLM latency or answer quality. Preserve useful evidence when shortening input.
+Context values are hypothetical. Reserving output does not mean generating or billing that amount; fitting does not guarantee answer quality. The notebook measures neither LLM speed nor quality.
 
-## Help with this task
+## Save and share
+
+Save code with **Ctrl+S** / **Cmd+S**, and **download findings before closing**. Browser fields are session inputs. The JSON records predictions, both traces, the current frequency setting, probe pieces/counts, explanations, real-tokenizer measurements and check status. Share one explanation both partners can defend.
+
+## Help
 
 | What you see | What to try |
 |---|---|
-| Check says waiting | Replace both placeholders in that TODO and rerun it. |
-| Red error after an edit | Undo the last change, check spelling and indentation, and keep the supplied return line. |
-| A check fails | Read its feedback and open the folded hint. Explain each variable to your partner. |
-| Weird `\x..` in a piece | One token may contain only part of a UTF-8 character. Inspect bytes and the full-sequence decode. |
-| Too much code on screen | Collapse the prepared cells and keep the TODO code and results visible. |
-| Notes disappeared after restart | Text-box values are session inputs. Download findings before closing. Saved notebook code remains on disk. |
+| Waiting | Replace that function's `None` with your implementation and rerun. |
+| Pair-count check fails | Re-read the rules for word frequency, current token boundaries and repeated neighbours. |
+| Merge check fails | Re-read the rules for non-overlap, the final position and preserving input. |
+| Red cell error | Check indentation and the return line; undo the last edit if needed. |
+| Same probe result in both runs | This is valid. Compare which learned rules that word actually uses. |
+| Weird `\x..` in a real token | A byte fragment need not form a UTF-8 character by itself. Inspect full-sequence decoding. |
 
-For installation, connection or port problems, use the [general troubleshooting guide](../../README.md#troubleshooting).
+For connection, port or installation problems use [shared troubleshooting](../../README.md#troubleshooting).
 
-## Course mapping and resources
+## Course mapping and sources
 
-Current handoff: LLM Day 1 slide 21, **Exercise: tokens and context budget**. The combined room task runs 10:00–10:15; setup/review are separate.
+LLM Day 1 slide **21 — Exercise: learn and test BPE merges** launches the 10:00–10:15 room task; slide 24 debriefs the evidence. Setup and plenary review are separate.
 
-References: [tiktoken](https://github.com/openai/tiktoken),
-[SentencePiece](https://github.com/google/sentencepiece),
-[real chat templates](https://huggingface.co/docs/transformers/main/en/chat_templating).
+Background for after the exercise: [Hugging Face BPE lesson](https://huggingface.co/learn/llm-course/en/chapter6/5), [tiktoken](https://github.com/openai/tiktoken), [SentencePiece](https://github.com/google/sentencepiece).
 
-[Back to all exercises](../README.md) · [Repository setup](../../README.md)
+[All exercises](../README.md) · [Repository setup](../../README.md)
 
 ## Maintainer check
-
-From the repository root, validate this notebook's structure with:
 
 ```sh
 uv run --locked marimo check --strict exercises/block-01-tokenization-context/01_tokenization_context.py
 ```
 
-Instructor solutions and completed-notebook checks are kept locally and excluded
-from the student repository.
-
-## Current teaching handoff
-
-LLM Day 1, Block 1: actual slide **21 — Exercise: tokens and context budget** launches the combined exercise + breakout. Return to plenary at the agenda’s room end. The notebook and group task are self-contained; private trainer files are not required.
+Instructor implementations, reference traces and completed-notebook checks stay local in the ignored `instructor/` folder.

@@ -1,4 +1,4 @@
-"""Infrastructure supplied to students; the two TODOs live in the notebook."""
+"""Prepared displays and training orchestration; BPE algorithms live in student TODOs."""
 
 import os
 from pathlib import Path
@@ -10,6 +10,93 @@ EXAMPLES = {
     "German": "Das Modell sagt das nächste Token voraus.",
     "Code": "next_token = model.predict(context)",
 }
+BPE_CORPUS = {"map": 8, "maps": 4, "cap": 5, "can": 10, "ran": 3}
+BPE_PROBES = ("maps", "rap")
+
+
+def check_pairs(count_pairs):
+    """Small behavioral checks, without a reference counting implementation."""
+    cases = [
+        ({"xy": ["x", "y"], "xyz": ["x", "y", "z"]}, {"xy": 2, "xyz": 3},
+         {("x", "y"): 5, ("y", "z"): 3}, "Weight each occurrence by its word frequency."),
+        ({"aaa": ["a", "a", "a"]}, {"aaa": 3}, {("a", "a"): 6},
+         "Count adjacent positions, including overlapping pairs during counting."),
+        ({"xy": ["xy"], "z": ["z"], "": []}, {"xy": 2, "z": 1, "": 1}, {},
+         "Inspect current tokens, not characters inside a merged token. Never cross words."),
+    ]
+    try:
+        from copy import deepcopy
+        for splits, frequencies, expected, message in cases:
+            before = deepcopy(splits)
+            original_frequencies = frequencies.copy()
+            result = count_pairs(splits, frequencies)
+            if result is None:
+                return False, "TODO 1 is waiting. Return a dictionary of pair frequencies."
+            if not isinstance(result, dict) or result != expected:
+                return False, message
+            if splits != before or frequencies != original_frequencies:
+                return False, "Counting must leave the supplied token lists and frequencies unchanged."
+        return True, "TODO 1 passed: weighted counts, repeated neighbours and word boundaries."
+    except Exception as exc:
+        return False, f"TODO 1 needs another look: {type(exc).__name__}: {exc}"
+
+
+def check_merge(merge_pair):
+    """Check non-overlap, existing multi-character tokens and input preservation."""
+    cases = [
+        (["a", "b", "a", "b"], ("a", "b"), ["ab", "ab"]),
+        (["a", "a", "a"], ("a", "a"), ["aa", "a"]),
+        (["ab", "c", "ab", "c"], ("ab", "c"), ["abc", "abc"]),
+        (["a", "b", "c"], ("a", "c"), ["a", "b", "c"]),
+        (["x"], ("x", "y"), ["x"]),
+        ([], ("x", "y"), []),
+    ]
+    try:
+        for tokens, pair, expected in cases:
+            original = tokens.copy()
+            result = merge_pair(tokens, pair)
+            if result is None:
+                return False, "TODO 2 is waiting. Return a new list after one merge pass."
+            if not isinstance(result, list) or result != expected:
+                return False, "Merge matching neighbours left to right without reusing a token. Keep all other tokens."
+            if tokens != original or result is tokens:
+                return False, "Return a new list; keep the original list unchanged for comparison."
+        return True, "TODO 2 passed: repeated matches, overlap, merged tokens and empty input."
+    except Exception as exc:
+        return False, f"TODO 2 needs another look: {type(exc).__name__}: {exc}"
+
+
+def train_bpe(frequencies, count_pairs, merge_pair, rounds=3):
+    """Supply the training loop, calling the learner's two algorithmic steps."""
+    splits = {word: list(word) for word in frequencies}
+    merges, trace = [], []
+    for step in range(1, rounds + 1):
+        counts = count_pairs(splits, frequencies)
+        if not counts:
+            break
+        pair = min(counts, key=lambda item: (-counts[item], item))
+        splits = {word: merge_pair(tokens, pair) for word, tokens in splits.items()}
+        merges.append(pair)
+        trace.append({
+            "Round": step, "Chosen pair": list(pair), "Weighted occurrences": counts[pair],
+            "All pair counts": [
+                {"pair": list(key), "count": value}
+                for key, value in sorted(counts.items(), key=lambda item: (-item[1], item[0]))
+            ],
+            "Splits after merge": {word: tokens.copy() for word, tokens in splits.items()},
+            "Corpus token positions": sum(len(splits[word]) * freq for word, freq in frequencies.items()),
+        })
+    return {"frequencies": dict(frequencies), "merges": merges, "trace": trace, "splits": splits}
+
+
+def apply_bpe(word, merges, merge_pair, alphabet):
+    """Replay this toy's learned rules; reject characters absent from its alphabet."""
+    if not set(word) <= set(alphabet):
+        raise ValueError("Use only characters from the training alphabet in this toy.")
+    tokens = list(word)
+    for pair in merges:
+        tokens = merge_pair(tokens, pair)
+    return tokens
 
 
 def load_tokenizer():
