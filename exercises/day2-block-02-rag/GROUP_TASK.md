@@ -12,7 +12,7 @@ Use the [shared setup](../../README.md); model downloads and launch checks happe
 
 ## Your group task
 
-1. Predict source IDs and a chunk-size effect. Complete the reranked evidence-selection TODO; run the supplied baseline plus changed-chunk comparison for all three questions. Keep models, questions, overlap and evidence budget fixed.
+1. Predict source IDs and a chunk-size effect. Complete the reranked evidence-selection TODO; run the supplied baseline plus changed-chunk comparison for all three questions. Keep models, questions, overlap (20 words), candidate limit (5) and selected-passage limit (2) fixed.
 
 2. For one supported question, compare top retrieved/reranked passages and actual generated answers. Quote original words and identify whether a failure starts in retrieval or generation.
 
@@ -21,6 +21,8 @@ Use the [shared setup](../../README.md); model downloads and launch checks happe
 ## Bring back
 
 Three paired question/answer/source records, original-source checks, one diagnosed failure/limitation and a justified next fix.
+
+The passage limit is fixed, but the amount of text is not: two 80-word chunks can supply up to 160 word occurrences; two 40-word chunks up to 80. Fewer candidates or passages are returned when fewer chunks are available. Keeping overlap at 20 words also changes its share of a chunk. Interpret the whole chunk-setting change; this comparison does not isolate boundary placement from context length or repeated evidence.
 
 Use the notebook’s prediction/observation fields. Save the Python source and download findings to retain browser inputs and measurements. Both partners should be able to explain the conclusion; swap editor/checker around halfway. If you finish early, state a competing explanation and a new controlled test that would distinguish it.
 

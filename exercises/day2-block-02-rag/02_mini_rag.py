@@ -37,7 +37,7 @@ def _(mo):
 
     **15 minutes in pairs after guided setup.** Build a small own-document RAG and locate the stage responsible for a result.
 
-    1. Predict source IDs and a chunk-size effect. Complete the reranked evidence-selection TODO; run the supplied baseline plus changed-chunk comparison for all three questions. Keep models, questions, overlap and evidence budget fixed.
+    1. Predict source IDs and a chunk-size effect. Complete the reranked evidence-selection TODO; run the supplied baseline plus changed-chunk comparison for all three questions. Keep models, questions, overlap (20 words), candidate limit (5) and selected-passage limit (2) fixed.
 
     2. For one supported question, compare top retrieved/reranked passages and actual generated answers. Quote original words and identify whether a failure starts in retrieval or generation.
 
@@ -157,7 +157,7 @@ def _(mo, validate_context, validate_selection):
 @app.cell(hide_code=True)
 def _(mo):
     run_rag = mo.ui.run_button(label="Run baseline + changed chunks for all three questions (6 real answers)")
-    mo.vstack([mo.md('## 4. Run and compare (13 min)\nUse the same documents, questions, models, overlap, candidate count (5) and selected count (2). Only chunk size changes: 80 → your selection. Inspect vector order AND reranker order. Model calls run only on this button and may take a minute. After any edit, press Run again to obtain new measured results.'), run_rag])
+    mo.vstack([mo.md('## 4. Run and compare\nUse the same documents, questions, models, overlap (20 words), candidate limit (5) and selected-passage limit (2). Change chunk size: 80 → your selection. The limits stay fixed; fewer candidates or passages are returned when fewer chunks exist. The amount of context text and relative overlap can change. Compare the complete chunk settings; this does not isolate boundary placement from context length or repeated evidence. Inspect vector order AND reranker order. Model calls run only on this button and may take a minute. After any edit, press Run again to obtain new measured results.'), run_rag])
     return (run_rag,)
 
 

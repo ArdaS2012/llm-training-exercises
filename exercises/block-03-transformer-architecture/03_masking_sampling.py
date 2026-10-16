@@ -84,7 +84,7 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(K, Q, SCORES, V, mo):
     mo.md(f"""
-    ## 1. Add a causal mask (10 minutes after 5 minutes predicting)
+    ## 1. Add a causal mask
     Supplied Q = {Q}, K = {K}, V = {V}. Each has shape 3 × 2.
     Scores S = QKᵀ / √2 have shape 3 × 3: `{SCORES}`.
     Rows receive context (Queries); columns provide it (Keys/Values).

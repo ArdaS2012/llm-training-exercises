@@ -83,8 +83,13 @@ they are not additional consecutive room timers.
    unchanged with its exact `[chunk ID]` label. Test independently of TODO 1.
 4. **Measure:** press Run for three questions × two chunk settings.
    Baseline: 80 whitespace words; changed: 40 or 120; both overlap 20. Hold
-   model/questions, five candidates and two selected passages fixed. Inspect cosine
+   model/questions, candidate limit (5) and selected-passage limit (2) fixed. Inspect cosine
    order before reranking, raw logits after reranking and actual generated answers.
+   These limits are fixed, not context length: two 80-word chunks can
+   supply up to 160 word occurrences; two 40-word chunks up to 80. The same
+   20-word overlap is also a different fraction of each chunk. Attribute results
+   to the complete chunk-setting change, not solely to boundary placement.
+   Fewer candidates or passages are returned when fewer chunks are available.
 5. **Judge:** record supported/unsupported/uncertain per answer. Verify
    each citation exists AND supports its claim. Check the absent question across
    original files. Explain one retrieval change and one failure/limitation.
