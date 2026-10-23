@@ -3,9 +3,9 @@
 
 ## Exercise + breakout
 
-Follow the [15-minute group task](GROUP_TASK.md) after guided setup.
+Follow the [30-minute investigation](GROUP_TASK.md) after the brief orientation.
 
-Build a traceable retrieval-and-generation pipeline in pairs (guided setup, then 15-minute exercise + breakout).
+Build a traceable retrieval-and-generation pipeline in pairs (guided setup, then 30-minute exercise + breakout).
 Prerequisites: basic Python lists/dictionaries, Day 1 context/inference and Day 2
 prompting. Read the [shared setup](../../README.md) first. Two TODOs select
 reranked records and compose labelled context; all other plumbing is supplied.
@@ -70,7 +70,7 @@ fictional. Using only samples does not fulfill the own-document activity.
 
 ## Guided preparation and findings
 
-Use the [15-minute group task](GROUP_TASK.md) for the timed breakout. These steps
+Use the [30-minute investigation](GROUP_TASK.md) for the timed breakout. These steps
 describe the complete investigation across preparation, rooms and plenary review;
 they are not additional consecutive room timers.
 
@@ -122,3 +122,9 @@ Students need no private presenter files. Sources: [RAG](https://arxiv.org/abs/2
 ## Current teaching handoff
 
 LLM Day 2, Block 2: actual slide **33 — Exercise: diagnose your Mini-RAG** launches the combined exercise + breakout. Return to plenary at the agenda’s room end. The notebook and group task are self-contained; private trainer files are not required.
+
+## Why this is hands-on
+
+Turn your own permitted documents into a research assistant, then trace one answer back through the pipeline to find what helped or failed. Both partners change or inspect actual runnable behavior, challenge a prediction with source evidence, and make a decision. The [investigation](GROUP_TASK.md) keeps the slide takeaways beside the task and gives a topic-specific 30-minute route; extra time is for understanding and diagnosis, not more boilerplate code.
+
+**Before measuring:** the notebook displays both complete chunk inventories without any model call. Open the baseline and changed inventories, copy each supporting ID and original-source reference into **Freeze your source references**, then run. Your downloaded export preserves these source notes for Block 4.

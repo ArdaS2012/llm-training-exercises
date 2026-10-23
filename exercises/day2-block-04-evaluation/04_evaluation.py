@@ -19,19 +19,33 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    ## Exercise + breakout: your shared task
+    ## Your 30-minute investigation
 
-    **15 minutes in pairs after guided setup.** Distinguish retrieval success, answer correctness and judge reliability in a defensible evaluation.
+    **Act as the release reviewers for your own Mini-RAG: use measured evidence to decide which version, if either, deserves another test.**
 
-    1. Predict a tradeoff and implement the scoring TODO. Compare the fixture configurations at k=2; report exact match, schema validity, recall and their denominators. Verify one case manually.
+    ### Remember from the slides
+    Correctness, format and retrieval measure different things. Recall@k divides unique relevant IDs found by all relevant IDs; an empty relevant set is undefined. A judge is another fallible measurement. Previously inspected cases are retrospective.
 
-    2. Rescore at k=3 without regenerating answers. Explain which metric can change and why. Load the prepared own Mini-RAG records and label the evaluation design honestly.
+    **0–5 · Challenge a score**
+    Agree what would make you prefer one configuration. On one fixture, calculate exact match, schema validity and Recall@2 by hand before running code. State every denominator; predict what k=3 can change. Fixtures are authored calibration cases, not evidence that a model performs well.
 
-    3. Rate one case independently from source evidence, then run the actual judge. Record disagreement, agreement or schema failure; choose a configuration conditionally and specify a fresh held-out test.
+    **5–12 · Build and cross-check**
+    Complete the single scoring TODO. Compare paired fixture configurations at k=2 and reconcile your manual case. Rescore at k=3 without regenerating answers. Explain why retrieval can change while saved-answer correctness and format remain fixed.
 
-    **Bring back:** Per-case/aggregate report, manual score check, k comparison, real judge/source comparison and a justified decision.
+    **12–24 · Audit your actual assistant**
+    Switch to your own Block 2 export, using original-document references and per-variant relevant IDs. Keep its evaluation-design label honest. Swap editor/checker at minute 15. One partner independently rates a chosen case from source evidence; then run the real model judge and compare its raw rating/schema. Record agreement, disagreement or unavailable/invalid judgment honestly.
 
-    Swap editor/checker halfway. Record in the observation fields, save code and download findings. The complete task and setup are in this block’s `GROUP_TASK.md`. Prerequisite TODOs discussed in plenary belong to setup.
+    **24–27 · Make a release decision**
+    Inspect one consequential failed or ambiguous case. Choose a configuration conditionally, or reject both. Name which metric supports the choice, one tradeoff, and a fresh held-out question that could reverse the decision. The checking partner challenges the claim using the original source.
+
+    **27–30 · Save an auditable report**
+    Export the per-case/aggregate report, manual check, k comparison, source-versus-judge evidence and decision. Save code; both partners must explain what the report cannot establish.
+
+    **Bring back:** Manual score check, per-case and aggregate report, saved-answer k comparison, own-document human/judge comparison and a conditional release decision with a fresh test.
+
+    **Limit:** A few convenient records cannot certify an application. Exact match can reject a correct paraphrase; free-text answers may fail an irrelevant JSON contract. Choose metrics for the task and keep technical judge failures separate from agreement.
+
+    Swap editor/checker at minute 15; keep this task open. Full preparation/help: this block’s `GROUP_TASK.md`.
     """)
     return
 
@@ -40,7 +54,7 @@ def _(mo):
 def _(mo):
     mo.md("""
     # Measure, inspect, decide
-    **Day 2 Block 4 · launch slide 63 · 15-minute group task after guided setup.**
+    **Day 2 Block 4 · launch slide 64 · 30-minute investigation immediately after the concepts.**
     Predict → implement one small scoring TODO → compare paired cases → inspect a
     real judge → check against source evidence → export findings. The supplied paired
     fixtures are authored examples, not measured model outputs. Use your Block 2
@@ -132,7 +146,7 @@ def _(judge_case, judge_run, mo, rows, run_judge):
 @app.cell(hide_code=True)
 def _(mo):
     decision = mo.ui.text_area(label='Configuration choice, metric tradeoff, sample limitation, next held-out test.',full_width=True)
-    mo.vstack([mo.md('## Decide and save \nExport per-case/aggregate scores, your own-document records, judge evidence and the reason for your choice. If no numeric disagreement occurred, record agreement honestly and inspect a judge schema failure or another case. Return to the plenary findings review on slide 64.'),decision])
+    mo.vstack([mo.md('## Decide and save \nExport per-case/aggregate scores, your own-document records, judge evidence and the reason for your choice. If no numeric disagreement occurred, record agreement honestly and inspect a judge schema failure or another case. Return to the plenary findings review on slide 65.'),decision])
     return (decision,)
 
 

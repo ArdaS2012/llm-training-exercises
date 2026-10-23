@@ -1,31 +1,51 @@
 # Exercise: diagnose your Mini-RAG
 
-**Exercise + breakout · LLM Day 2 Block 2 · 15 minutes in pairs**
+**30 minutes in pairs · LLM Day 2 · room 11:15–11:45**
 
-Learning goal: Build a small own-document RAG and locate the stage responsible for a result.
+Turn your own permitted documents into a research assistant, then trace one answer back through the pipeline to find what helped or failed.
+
+## Keep these slide takeaways beside you
+
+Chunks must keep supporting facts together. Cosine similarity ranks candidates, not truth. Reranking only reorders retrieved candidates. A citation must exist AND support the claim.
 
 ## Before the room opens
 
-Preload models, ingest 2–4 permitted short English documents and formulate two supported questions plus one absent-answer question. Reserve fresh evaluation questions before running either configuration. In plenary complete the context-labeling prerequisite and locate original source text; leave evidence selection for rooms.
+Before class, cache/warm models, check permissions and mechanically load 2–4 short own English documents. The five-minute plenary orientation shows the full source-to-answer trace and reference-label controls. Source questions, labels and both small TODOs are pair work, before any run.
 
-Use the [shared setup](../../README.md); model downloads and launch checks happen before the task. Start from the repository root with `uv run --locked --group rag python start.py --block d2-2`. Keep the starter open. Prerequisite TODOs discussed in plenary belong to setup; the task below is the room assignment.
+Use the [shared setup](../../README.md) and launch from the repository root:
 
-## Your group task
+```sh
+uv run --locked --group rag python start.py --block d2-2
+```
 
-1. Predict source IDs and a chunk-size effect. Complete the reranked evidence-selection TODO; run the supplied baseline plus changed-chunk comparison for all three questions. Keep models, questions, overlap (20 words), candidate limit (5) and selected-passage limit (2) fixed.
+## Your investigation
 
-2. For one supported question, compare top retrieved/reranked passages and actual generated answers. Quote original words and identify whether a failure starts in retrieval or generation.
+### 0–6 · Set a source contract
 
-3. Check the absent-answer question against all documents. Record abstention, invention or uncertainty honestly. Recommend one next fix from evidence and export the records for evaluation.
+Choose two questions your own texts can answer and one whose answer is absent from ALL texts. Quote reference words now; mark the relevant chunk IDs separately for each configuration. Freeze both configurations and reserve Q2/Q3 before either run. Predict which fact a smaller/larger chunk might lose. If you inspect these cases while improving the system, call the later evaluation retrospective.
+
+### 6–12 · Wire the evidence
+
+Complete evidence selection and labeled-context TODOs. Inspect the feedback on your own code. Explain to your partner why a score alone is insufficient: the generator needs both the unchanged passage and its source ID.
+
+### 12–22 · Run your experiment
+
+Run baseline 80-word chunks and one changed chunk size for the same three questions. Hold models, questions, overlap (20 words), candidate limit (5) and passage limit (2) fixed. Swap editor/checker at minute 15. While calls run, use source texts to check the reference labels; do not tune to reserved answers.
+
+### 22–27 · Follow the broken link
+
+Pick one surprising result. Walk original source → chunk boundary → vector candidates → reranked/selected context → raw answer. Point to the first stage that lost or distorted support. Check the absent question across the whole corpus. Recommend the next fix and say what measurement would test it.
+
+### 27–30 · Hand off to evaluation
+
+Download all six question/answer/source records and your findings for Block 4. Save your source-derived labels locally. Both partners explain the traced case and one limit.
 
 ## Bring back
 
-Three paired question/answer/source records, original-source checks, one diagnosed failure/limitation and a justified next fix.
+Own-document question/reference records, paired rankings/selected context/raw answers, source checks, a failure-stage diagnosis and one justified next fix; export retained for evaluation.
 
-The passage limit is fixed, but the amount of text is not: two 80-word chunks can supply up to 160 word occurrences; two 40-word chunks up to 80. Fewer candidates or passages are returned when fewer chunks are available. Keeping overlap at 20 words also changes its share of a chunk. Interpret the whole chunk-setting change; this comparison does not isolate boundary placement from context length or repeated evidence.
+**Interpretation limit:** Two retained 80-word chunks supply up to 160 word occurrences; two 40-word chunks up to 80. Fixed overlap also changes its proportion. This tests a whole chunk setting, not boundary placement alone. Fewer chunks can produce fewer candidates/passages. Do not claim every change isolates a single mechanism.
 
-Use the notebook’s prediction/observation fields. Save the Python source and download findings to retain browser inputs and measurements. Both partners should be able to explain the conclusion; swap editor/checker around halfway. If you finish early, state a competing explanation and a new controlled test that would distinguish it.
+The editor changes/runs code; the checker predicts, checks sources and challenges the conclusion. Swap at minute 15. Ask for help through the trainer’s chat/room-visit route if blocked. A failed or unchanged real result is useful when explained; never invent measurements. Save Python and download findings: saving source alone does not retain widget inputs.
 
-## Work within the timebox
-
-2 minutes to predict and agree; 7 to implement and compare; 4 to diagnose and defend; 2 to record/export. Ask for help through the trainer’s chat/room-visit route if blocked. Return to plenary for review and the scheduled quiz. Honest unchanged or failed results count as evidence when they are explained; do not invent measurements.
+**Before measuring:** the notebook displays both complete chunk inventories without any model call. Open the baseline and changed inventories, copy each supporting ID and original-source reference into **Freeze your source references**, then run. Your downloaded export preserves these source notes for Block 4.

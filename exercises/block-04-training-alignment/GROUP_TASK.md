@@ -1,29 +1,41 @@
-# Exercise: test a learning update
+# Exercise: Learning-update investigation
 
-**Exercise + breakout · LLM Day 1 Block 4 · 15 minutes in pairs**
+**30 minutes in pairs · LLM Day 1 · rooms 14:50–15:20**
 
-Learning goal: Connect negative-log loss, gradient descent and a control experiment to evidence of learning.
+## Your investigation
 
-## Before the room opens
+What evidence would convince you that parameters learned something rather than merely ran again? Work with the running notebook, inspect its results and make a decision together. One partner edits while the other checks the prediction and evidence; swap at minute 15.
 
-Open the output-layer starter and identify fixed features versus trainable W/b. Inspect loss/update function signatures and the reset-to-baseline controls. No model loading is needed.
+## Keep these slide takeaways beside the task
 
-Use the [shared setup](../../README.md); model downloads and launch checks happen before the task. Start from the repository root with `uv run --locked python start.py --block 4`. Keep the starter open. Prerequisite TODOs discussed in plenary belong to setup; the task below is the room assignment.
+From slides 67–70 and 73–75: loss, updates, training stages and inference: **Target loss is −log(p). Gradient descent changes parameters. Inference reads existing weights; a lower training loss needs evaluation.**
 
-## Your group task
+These ideas tell you what to measure. Use the definitions and worked input/output examples next to each TODO whenever you need help. A successful check establishes a function contract; the comparisons below establish your understanding.
 
-1. Predict the ordering of loss for target probabilities 0.25 and 0.5. Complete both bounded TODOs and check one scalar parameter update by hand.
+## Before rooms open
 
-2. Run rate 0.5 for 40 updates. Record before/after target probability and loss. Repeat with rate 0 and the same update count, keeping everything else fixed.
+Complete the [shared setup](../../README.md), open `uv run --locked python start.py --block 4` from the student repository root and practise running/saving cells. Downloads and environment repair precede class. Live handoff: 14:45–14:50; leave the implementations and predictions for the room.
 
-3. Compare W/b changes across the two runs. Explain why lower training loss cannot establish factual accuracy, alignment or generalization; specify one additional evaluation you would need.
+## Try it, inspect it, explain it
+
+1. Predict which target probability, 0.25 or 0.5, receives greater loss. Implement target loss and the update function. Check one scalar update by hand; name the parameter, gradient and learning rate.
+
+2. Run η=0.5 for 40 updates. Record before/after target probability, mean loss and one W/b entry. Repeat from the same initial state at η=0 with the same update count. Inspect both curves and parameter tables.
+
+3. Swap editor/checker. Choose either learning rate or update count to change, write a hypothesis and keep everything else fixed. Try to improve the measured loss with a bounded number of updates. Record the chosen setting and compare with the baseline; an unchanged or worse result is useful evidence.
+
+4. Defend a setting for this supplied training task using both probabilities and parameter changes. Separate evidence of fitting these examples from evidence of generalization, factual accuracy or alignment. Propose one unseen-context evaluation before claiming a better assistant.
+
+## Your 30-minute route
+
+0–4 min: predict loss/control outcomes. 4–14: implement, check a scalar update and run the baseline. 14–24: compare the zero-rate control and one chosen intervention, swapping roles at minute 15. 24–30: inspect parameters, defend a limited conclusion and export.
 
 ## Bring back
 
-One checked loss/update calculation, measured baseline/zero-rate comparison and a stated evaluation limit.
+Checked loss/update calculation, baseline/zero-rate curves and parameters, one self-chosen intervention and a qualified learning claim with a next evaluation. Before changing another control, record the current setting and result in the notebook’s observation/conclusion field, or download that run. The export holds the current run and baseline, so retain intermediate evidence before replacing it. Save code separately: browser fields are retained through the findings download, not by saving Python.
 
-Use the notebook’s prediction/observation fields. Save the Python source and download findings to retain browser inputs and measurements. Both partners should be able to explain the conclusion; swap editor/checker around halfway. If you finish early, state a competing explanation and a new controlled test that would distinguish it.
+Both partners should explain one result. If stuck, use the folded conceptual help or ask for a room visit. Explain honest unchanged/failed results. Stop optional exploration when six minutes remain and finish your explanation.
 
-## Work within the timebox
+## Course handoff
 
-2 minutes to predict and agree; 7 to implement and compare; 4 to diagnose and defend; 2 to record/export. Ask for help through the trainer’s chat/room-visit route if blocked. Return to plenary for review and the scheduled quiz. Honest unchanged or failed results count as evidence when they are explained; do not invent measurements.
+Actual Day 1 slide **76**, followed by the existing plenary review and external quiz.

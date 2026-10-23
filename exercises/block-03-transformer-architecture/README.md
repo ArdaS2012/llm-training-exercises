@@ -1,6 +1,6 @@
 # Block 3 — Causal Masking & Sampling
 
-Current handoff: LLM Day 1 slide 60, **Exercise: masking versus sampling**. The combined room task runs 13:45–14:00; setup/review are separate.
+Current handoff: LLM Day 1 slide 60, **Exercise: masking versus sampling**. The combined room task runs 13:35–14:05; setup/review are separate.
 
 Use the [shared installation and troubleshooting guide](../../README.md). Launch from the student repository:
 
@@ -17,7 +17,7 @@ You should recognize Q/K/V, row-wise softmax and output logits from the earlier 
 
 ## Exercise + breakout
 
-Follow the [15-minute group task](GROUP_TASK.md) after guided setup. It defines the required comparison, evidence and shared result. Keep the technical help below for the bounded TODOs.
+Follow the [30-minute investigation](GROUP_TASK.md) after guided setup. It defines the required comparison, evidence and shared result. Keep the technical help below for the bounded TODOs.
 
 ## Findings to explain
 
@@ -32,3 +32,7 @@ Undo if a cell turns red; check indentation, function names and return shapes. A
 ## Current teaching handoff
 
 LLM Day 1, Block 3: actual slide **60 — Exercise: masking versus sampling** launches the combined exercise + breakout. Return to plenary at the agenda’s room end. The notebook and group task are self-contained; private trainer files are not required.
+
+## Investigation and slide takeaways
+
+The [30-minute task](GROUP_TASK.md) keeps the relevant slide takeaways beside the investigation, explains the controls and required evidence, and gives you time to try an additional prediction. Can you stop future information leaking in while explaining why repeated token draws differ?

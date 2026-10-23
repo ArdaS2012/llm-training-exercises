@@ -39,19 +39,23 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    ## Exercise + breakout: your shared task
+    ## Decoder controls bench
 
-    **15 minutes in pairs after guided setup.** Separate control of context visibility from control of vocabulary-token selection.
+    **30 minutes in pairs · rooms 13:35–14:05.** Can you stop future information leaking in while explaining why repeated token draws differ?
 
-    1. Predict row B visibility. Complete the causal-mask TODO; verify future weights are zero, diagonal/past remain eligible and valid rows sum to one.
+    **From the preceding slides:** Causal masks restrict source positions before softmax. Temperature reshapes probabilities. Top-k limits vocabulary candidates.
 
-    2. Complete top-k selection. Compare T=0.5 and T=2 at the same k=2, seed and draw count; then compare k=1 and k=2 at fixed T. Interpret probabilities separately from sampled frequencies.
+    1. Predict which source positions row B may use. Complete the causal-mask function. Verify future weights are zero, diagonal/past are eligible and rows sum to one. Explain why replacing a blocked score by zero would still permit a contribution.
 
-    3. Change only the draw count from 200 to 1000. Explain a remaining discrepancy between frequencies and probabilities and why masking cannot replace candidate filtering.
+    2. Complete temperature softmax and top-k using their notebook explanations and independent checks. Compare T=0.5 and T=2 with k=2, seed 42 and 200 draws fixed. Read both probabilities and counts, rather than judging one sampled token.
 
-    **Bring back:** Masked heatmap, temperature/top-k comparison, k=1 check and a finite-sample explanation in the findings export.
+    3. At fixed T compare k=1 and k=2. Swap roles. Predict what changing only the seed will affect, then test it. Restore seed 42, increase only the draw count from 200 to 1000, and record one frequency/probability discrepancy.
 
-    Swap editor/checker halfway. Record in the observation fields, save code and download findings. The complete task and setup are in this block’s `GROUP_TASK.md`. Prerequisite TODOs discussed in plenary belong to setup.
+    4. Choose a supplied setting for repeatable fixed-prefix selection and one for more varied selection. Justify each from the retained candidates and measured distribution. Explain why neither setting guarantees truth, and why these independent draws do not simulate a whole generated conversation.
+
+    **Your route:** 0–4 min: predict visibility and label the two spaces. 4–14: implement the three bounded functions using their worked contracts. 14–24: inspect the heatmap and controlled T/k comparisons, swapping roles at minute 15. 24–30: challenge the sampling claim with seed/draw changes, decide and export.
+
+    **Bring back:** Masked heatmap, fixed-logit T/k table, k=1 boundary, seed/draw comparison and two justified decoding choices with a limitation. Record each setting/result before changing a control. Download intermediate runs if you need to keep their tables; the final export contains the current run and baseline. Save code and download findings. Full task: `GROUP_TASK.md`.
     """)
     return
 
@@ -63,7 +67,7 @@ def _(mo):
     **Block 3 · Day 1 slide 60: Apply masking and sampling in marimo**
 
     Predict → complete three short TODOs → change one input → interpret → download.
-    Work in pairs; swap the editor halfway through. This is a 15-minute group task after guided setup.
+    Work in pairs; swap the editor halfway through. This is a 30-minute investigation after guided setup.
     Supplied toy arrays make this independent of your progress in the Block 2 notebook.
     No model, API key or additional data download is needed.
 
@@ -226,12 +230,12 @@ def _(
                    masked_weights=masked_weights, sampling=sample_rows,
                    checks=dict(mask=mask_ok, temperature=temperature_ok, top_k=top_k_ok))
     mo.vstack([
-        mo.md("## 4. Save and share \nSave code with Ctrl+S / Cmd+S. Browser text and widget values are not saved in Python: download findings before closing. Share both heatmaps, the table and your explanation at slide 59, **Compare the mask and the samples**."),
+        mo.md("## 4. Save and share \nSave code with Ctrl+S / Cmd+S. Browser text and widget values are not saved in Python: download findings before closing. Share both heatmaps, the table and your explanation at slide 61, **Compare the mask and the samples**."),
         mo.download(json.dumps(_report, indent=2).encode(), filename="results-block3.json", label="Download findings and comparison table"),
         mo.download(unmasked_svg.encode(), filename="unmasked-attention.svg", label="Save unmasked heatmap"),
         mo.download(masked_svg.encode(), filename="causal-attention.svg", label="Save causal heatmap") if masked_svg else mo.md("Causal heatmap download becomes available after TODO 1."),
         mo.accordion({"Hints and troubleshooting": mo.md("Mask: compare column index to row index; zero is a valid score, not a block. Temperature: scale before exponentiating and sum along the vocabulary. Top-k: retain original positions before normalizing. If a cell turns red, undo and check indentation/return values. k=1 should permit only one token. Sample fractions need not exactly equal probabilities.")}),
-        mo.md("Sources: [Transformer decoder masking](https://arxiv.org/abs/1706.03762), [generation parameters](https://huggingface.co/docs/transformers/main/en/main_classes/text_generation), [marimo](https://docs.marimo.io/getting_started/). Trainer-only explanation: Day 1 guide §16, slides 50 and 54–59. Student instructions are in this notebook and its README."),
+        mo.md("Sources: [Transformer decoder masking](https://arxiv.org/abs/1706.03762), [generation parameters](https://huggingface.co/docs/transformers/main/en/main_classes/text_generation), [marimo](https://docs.marimo.io/getting_started/). Trainer-only explanation: Day 1 guide §16, slides 52 and 56–61. Student instructions are in this notebook and its README."),
     ])
     return
 

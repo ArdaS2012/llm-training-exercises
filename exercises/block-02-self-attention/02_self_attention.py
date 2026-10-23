@@ -32,19 +32,23 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    ## Exercise + breakout: your shared task
+    ## Attention circuit investigation
 
-    **15 minutes in pairs after guided setup.** Distinguish the matching function controlled by Q/K from the payload controlled by V.
+    **30 minutes in pairs · rooms 11:05–11:35.** Which change reroutes information, and which changes only the information being carried?
 
-    1. Predict the strongest source for Query A. Complete the score and Value-mixing TODOs; check shapes and approximately-one row sums. Trace one output coordinate numerically.
+    **From the preceding slides:** Q/K determine matching scores. Row softmax gives source weights. O = AV mixes the Value payloads.
 
-    2. Keep a baseline. Add +1 to Q row A, feature 0; record which rows of scores, weights and outputs change. Reset delta to zero.
+    1. Predict Query A’s strongest source. Complete the three small functions using the notebook’s shapes and worked softmax example. Check row sums and manually trace one output coordinate. Heatmap rows receive information; columns supply it.
 
-    3. Add +1 to V row A, feature 0 with Q/K fixed. Compare with the Query intervention and explain the changed output using the relevant attention weight.
+    2. Keep the baseline. Add +1 to Q row A, feature 0. Record which rows of scores, weights and outputs change, with numerical evidence. Reset delta to zero before the next run.
 
-    **Bring back:** Baseline and two interventions, one worked output coordinate, invariant checks and a mechanism explanation in the findings export.
+    3. Add +1 to V row A, feature 0 with Q/K fixed. Compare both heatmaps and output tables. Use the relevant source weight to explain one output difference. Swap editor/checker and let the checker operate the next test.
 
-    Swap editor/checker halfway. Record in the observation fields, save code and download findings. The complete task and setup are in this block’s `GROUP_TASK.md`. Prerequisite TODOs discussed in plenary belong to setup.
+    4. Choose a single K coordinate, write a prediction, then test it. Look for either an affected receiver or a receiver that stays fixed. Use its dot product to explain the result. Decide which matrix you would change to alter routing versus payload, and state why this tiny head cannot explain a complete trained model.
+
+    **Your route:** 0–4 min: predict and label the axes. 4–14: implement, use feedback and trace one output. 14–24: run Q/V interventions and swap roles at minute 15. 24–30: test your own Key prediction, defend the mechanism and export.
+
+    **Bring back:** Baseline and Q/V comparisons, one worked weighted sum, a predicted/measured Key edit, invariant checks and a mechanism explanation with a limit. Record each setting/result before changing a control. Download intermediate runs if you need to keep their tables; the final export contains the current run and baseline. Save code and download findings. Full task: `GROUP_TASK.md`.
     """)
     return
 
@@ -53,12 +57,12 @@ def _(mo):
 def _(K, Q, V, mo):
     mo.md(rf"""
     # Build a tiny attention head
-    **Block 2 · Day 1 slide 39 · 15-minute group task after guided setup**
+    **Block 2 · Day 1 slide 39 · 30-minute investigation after guided setup**
 
     Predict → complete three short TODOs → inspect → change one input → explain.
     All setup, toy matrices, checks and rendering are prepared. Show TODO code,
     replace `None` and run with **Shift+Enter**. Preserve function names/return lines.
-    Waiting feedback is normal. Swap who edits after the weight calculation.
+    Waiting feedback is normal. Swap editor/checker at minute 15.
     No model, API key, GPU, trained sentence relationships or extra download is used.
 
     Q = {Q}, K = {K}, V = {V}; each has shape 3 × 2.
@@ -248,7 +252,7 @@ def _(
               mo.download(json.dumps(_report, indent=2).encode(), filename="results-block2.json", label="Download my attention findings")]
     if baseline_svg:
         _items.extend([mo.download(baseline_svg.encode(), filename="attention-baseline.svg", label="Save baseline heatmap"), mo.download(experiment_svg.encode(), filename="attention-changed.svg", label="Save changed heatmap")])
-    _items.extend([mo.accordion({"Hints": mo.md("Scores: think Query rows × Key rows. Softmax: normalize each row after exponentiating. Values: sum over source j while keeping output feature r. If a cell turns red, undo and inspect indentation and return shapes. Checks use different sizes to catch accidental hard-coding.")}), mo.md("Sources: [Attention Is All You Need, §3.2](https://arxiv.org/abs/1706.03762), [marimo basics](https://docs.marimo.io/getting_started/). The student README supplies all task instructions; trainer-only guide §12 maps to Day 1 slide 38.")])
+    _items.extend([mo.accordion({"Hints": mo.md("Scores: think Query rows × Key rows. Softmax: normalize each row after exponentiating. Values: sum over source j while keeping output feature r. If a cell turns red, undo and inspect indentation and return shapes. Checks use different sizes to catch accidental hard-coding.")}), mo.md("Sources: [Attention Is All You Need, §3.2](https://arxiv.org/abs/1706.03762), [marimo basics](https://docs.marimo.io/getting_started/). The student README supplies all task instructions; trainer-only guide §12 maps to Day 1 slide 39.")])
     mo.vstack(_items)
     return
 

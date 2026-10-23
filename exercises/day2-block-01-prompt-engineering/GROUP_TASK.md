@@ -1,29 +1,49 @@
 # Exercise: test a prompt revision
 
-**Exercise + breakout · LLM Day 2 Block 1 · 15 minutes in pairs**
+**30 minutes in pairs · LLM Day 2 · room 09:40–10:10**
 
-Learning goal: Test a prompt hypothesis against factual and formatting evidence while holding the model and cases fixed.
+Build and stress-test a research intake assistant: can a prompt protect missing facts and resist instructions hidden in a document?
+
+## Keep these slide takeaways beside you
+
+Examples teach a pattern, not new weights. System policy and document data have different roles. Valid JSON can still contain an invented fact; a plausible calculation still needs checking.
 
 ## Before the room opens
 
-Preload the pinned model before class. In plenary, complete the independent reasoning-prompt TODO and inspect its checkable arithmetic comparison. Show the three extraction documents, schema, message interface and source-based verdict controls. Leave extraction message construction for rooms.
+Before class, cache/warm the pinned model and open the starter. The five-minute plenary orientation shows the three documents, schema, message controls and source-verdict fields. The pair completes both small TODOs in the room; no comparison is pre-solved.
 
-Use the [shared setup](../../README.md); model downloads and launch checks happen before the task. Start from the repository root with `uv run --locked --group prompting python start.py --block d2-1`. Keep the starter open. Prerequisite TODOs discussed in plenary belong to setup; the task below is the room assignment.
+Use the [shared setup](../../README.md) and launch from the repository root:
 
-## Your group task
+```sh
+uv run --locked --group prompting python start.py --block d2-1
+```
 
-1. Predict missing-field behavior. Complete the extraction-message TODO and run the supplied zero-/few-shot comparison on all three documents. Inspect raw outputs and automatic schema flags.
+## Your investigation
 
-2. Save the baseline. Change only the system policy to address one observed failure; rerun the same cases. Each partner checks a subset against original source words; compare the fully correct case count separately from schema validity.
+### 0–4 · Check the reasoning
 
-3. Defend or reject the revision using one case-level comparison. Identify a remaining failure or limitation and propose a fresh test that could disprove your conclusion.
+Each partner calculates the pen question independently. Complete the reasoning-prompt TODO, run its two variants and compare the actual calculation with your own. Does an explanation establish correctness? Keep the arithmetic evidence.
+
+### 4–10 · Make your first assistant
+
+Choose a failure to watch: missing values or instructions inside document text. Predict which case will expose it. Complete the extraction-message TODO and run the zero-/few-shot baseline on all three supplied documents. Inspect raw output and the separate schema flags. Download this baseline before editing policy.
+
+### 10–20 · Repair one thing
+
+Change only system policy to target that failure. Keep model, decoding, examples and all three documents fixed; rerun. Swap editor/checker at minute 15. The new checker independently audits source words instead of trusting the first partner’s judgment.
+
+### 20–27 · Put the revision on trial
+
+Each partner presents one before/after case: quote the source, show the raw values and judge schema versus factual correctness separately. Count fully correct cases per variant. Keep regression or no improvement; choose which policy you would use conditionally, and design a fresh input that could disprove that choice.
+
+### 27–30 · Save your evidence
+
+Record the policy comparison, reasoning check, decision and limitation; download findings and save code. Both partners must explain why one output passed or failed.
 
 ## Bring back
 
-Baseline/revised policy, real raw outputs, source-backed judgments and a conditional decision in the findings export.
+Baseline and revised policies/exports, actual raw outputs, source-backed factual judgments separate from schema flags, checked arithmetic and a conditional policy decision.
 
-Use the notebook’s prediction/observation fields. Save the Python source and download findings to retain browser inputs and measurements. Both partners should be able to explain the conclusion; swap editor/checker around halfway. If you finish early, state a competing explanation and a new controlled test that would distinguish it.
+**Interpretation limit:** These three inspected cases are development diagnostics. More cases and a fresh held-out test are needed before a reliability claim. Small-model failure is a finding, not an invitation to write an ideal answer in its place.
 
-## Work within the timebox
-
-2 minutes to predict and agree; 7 to implement and compare; 4 to diagnose and defend; 2 to record/export. Ask for help through the trainer’s chat/room-visit route if blocked. Return to plenary for review and the scheduled quiz. Honest unchanged or failed results count as evidence when they are explained; do not invent measurements.
+The editor changes/runs code; the checker predicts, checks sources and challenges the conclusion. Swap at minute 15. Ask for help through the trainer’s chat/room-visit route if blocked. A failed or unchanged real result is useful when explained; never invent measurements. Save Python and download findings: saving source alone does not retain widget inputs.

@@ -2,7 +2,7 @@
 
 ## Exercise + breakout
 
-Every supplied training exercise runs as a 15-minute pair task in breakout rooms after guided setup. Each block folder has a `GROUP_TASK.md` with the comparison, shared output and timebox; the same task is visible at the top of its notebook. Alternate editor/checker roles and bring evidence back to plenary. Blocks with no notebook exercise have no separate breakout task.
+Every supplied training exercise runs as a 30-minute pair investigation in breakout rooms after guided setup. Each block folder has a `GROUP_TASK.md` with the comparison, shared output and timebox; the same task is visible at the top of its notebook. Keep the preceding slide takeaways beside the task. Predict, implement a small step, explore a controlled change and use the measured evidence to make a decision. Swap editor/checker at minute 15 and bring both the finding and a limitation back to plenary. Blocks with no notebook exercise have no separate breakout task.
 
 Prepared marimo exercises for the LLM course, using one shared Python environment.
 This README covers repository access, installation, starting/stopping marimo and

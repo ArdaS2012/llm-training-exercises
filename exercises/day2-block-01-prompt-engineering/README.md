@@ -2,7 +2,7 @@
 
 Compare zero-shot and few-shot extraction, system policy, a checkable reasoning
 example and JSON output checks. Two short TODOs build prompts; model loading,
-generation, widgets and format checks are supplied. Work in pairs in breakout rooms for the 15-minute group task after guided setup.
+generation, widgets and format checks are supplied. Work in pairs in breakout rooms for the 30-minute investigation after the brief orientation.
 Prerequisites: Day 1 inference/context and basic Python lists/dictionaries.
 Read the [shared setup guide](../../README.md) first.
 
@@ -45,7 +45,7 @@ public toy texts, not confidential material.
 
 ## Exercise + breakout
 
-Follow the [15-minute group task](GROUP_TASK.md) after guided setup. It defines the required comparison, evidence and shared result. Keep the technical help below for the bounded TODOs.
+Follow the [30-minute investigation](GROUP_TASK.md) after the brief orientation. It defines the required comparison, evidence and shared result. Keep the technical help below for the bounded TODOs.
 
 ## Help and course mapping
 
@@ -58,8 +58,12 @@ truncated; record it as a failure. Buttons bound model calls; no automatic paid 
 A fixed greedy configuration improves comparability but is not a cross-hardware
 bit-for-bit promise. The download includes all inputs: inspect it before sharing.
 
-Current handoff: LLM Day 2 slide 17, **Exercise: test a prompt revision**. The combined room task runs 09:55–10:10; setup/review are separate.
+Current handoff: LLM Day 2 slide 17, **Exercise: test a prompt revision**. The combined room task runs 09:40–10:10; setup/review are separate.
 
 ## Current teaching handoff
 
 LLM Day 2, Block 1: actual slide **17 — Exercise: test a prompt revision** launches the combined exercise + breakout. Return to plenary at the agenda’s room end. The notebook and group task are self-contained; private trainer files are not required.
+
+## Why this is hands-on
+
+Build and stress-test a research intake assistant: can a prompt protect missing facts and resist instructions hidden in a document? Both partners change or inspect actual runnable behavior, challenge a prediction with source evidence, and make a decision. The [investigation](GROUP_TASK.md) keeps the slide takeaways beside the task and gives a topic-specific 30-minute route; extra time is for understanding and diagnosis, not more boilerplate code.

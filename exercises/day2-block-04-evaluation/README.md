@@ -3,9 +3,9 @@
 
 ## Exercise + breakout
 
-Follow the [15-minute group task](GROUP_TASK.md) after guided setup.
+Follow the [30-minute investigation](GROUP_TASK.md) immediately after the concept explanation.
 
-Compare exact match, output-schema validity and Recall@k. Keep a paired test set, inspect a real model judge against source evidence, and export a justified configuration choice. One TODO is about 3–5 lines; guided setup plus a 15-minute exercise + breakout. Day 2 launch slide 63.
+Compare exact match, output-schema validity and Recall@k. Keep a paired test set, inspect a real model judge against source evidence, and export a justified configuration choice. One TODO is about 3–5 lines; a 30-minute investigation immediately after the concepts. Day 2 launch slide 64.
 
 Use [shared setup](../../README.md). From the repository root:
 
@@ -38,4 +38,8 @@ Troubleshooting: complete the TODO before scoring; list/set intersection counts 
 
 ## Current teaching handoff
 
-LLM Day 2, Block 4: actual slide **63 — Exercise: audit an evaluation decision** launches the combined exercise + breakout. Return to plenary at the agenda’s room end. The notebook and group task are self-contained; private trainer files are not required.
+LLM Day 2, Block 4: actual slide **64 — Exercise: audit an evaluation decision** launches the combined exercise + breakout. Return to plenary at the agenda’s room end. The notebook and group task are self-contained; private trainer files are not required.
+
+## Why this is hands-on
+
+Act as the release reviewers for your own Mini-RAG: use measured evidence to decide which version, if either, deserves another test. Both partners change or inspect actual runnable behavior, challenge a prediction with source evidence, and make a decision. The [investigation](GROUP_TASK.md) keeps the slide takeaways beside the task and gives a topic-specific 30-minute route; extra time is for understanding and diagnosis, not more boilerplate code.

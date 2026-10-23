@@ -35,19 +35,33 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    ## Exercise + breakout: your shared task
+    ## Your 30-minute investigation
 
-    **15 minutes in pairs after guided setup.** Test a prompt hypothesis against factual and formatting evidence while holding the model and cases fixed.
+    **Build and stress-test a research intake assistant: can a prompt protect missing facts and resist instructions hidden in a document?**
 
-    1. Predict missing-field behavior. Complete the extraction-message TODO and run the supplied zero-/few-shot comparison on all three documents. Inspect raw outputs and automatic schema flags.
+    ### Remember from the slides
+    Examples teach a pattern, not new weights. System policy and document data have different roles. Valid JSON can still contain an invented fact; a plausible calculation still needs checking.
 
-    2. Save the baseline. Change only the system policy to address one observed failure; rerun the same cases. Each partner checks a subset against original source words; compare the fully correct case count separately from schema validity.
+    **0–4 · Check the reasoning**
+    Each partner calculates the pen question independently. Complete the reasoning-prompt TODO, run its two variants and compare the actual calculation with your own. Does an explanation establish correctness? Keep the arithmetic evidence.
 
-    3. Defend or reject the revision using one case-level comparison. Identify a remaining failure or limitation and propose a fresh test that could disprove your conclusion.
+    **4–10 · Make your first assistant**
+    Choose a failure to watch: missing values or instructions inside document text. Predict which case will expose it. Complete the extraction-message TODO and run the zero-/few-shot baseline on all three supplied documents. Inspect raw output and the separate schema flags. Download this baseline before editing policy.
 
-    **Bring back:** Baseline/revised policy, real raw outputs, source-backed judgments and a conditional decision in the findings export.
+    **10–20 · Repair one thing**
+    Change only system policy to target that failure. Keep model, decoding, examples and all three documents fixed; rerun. Swap editor/checker at minute 15. The new checker independently audits source words instead of trusting the first partner’s judgment.
 
-    Swap editor/checker halfway. Record in the observation fields, save code and download findings. The complete task and setup are in this block’s `GROUP_TASK.md`. Prerequisite TODOs discussed in plenary belong to setup.
+    **20–27 · Put the revision on trial**
+    Each partner presents one before/after case: quote the source, show the raw values and judge schema versus factual correctness separately. Count fully correct cases per variant. Keep regression or no improvement; choose which policy you would use conditionally, and design a fresh input that could disprove that choice.
+
+    **27–30 · Save your evidence**
+    Record the policy comparison, reasoning check, decision and limitation; download findings and save code. Both partners must explain why one output passed or failed.
+
+    **Bring back:** Baseline and revised policies/exports, actual raw outputs, source-backed factual judgments separate from schema flags, checked arithmetic and a conditional policy decision.
+
+    **Limit:** These three inspected cases are development diagnostics. More cases and a fresh held-out test are needed before a reliability claim. Small-model failure is a finding, not an invitation to write an ideal answer in its place.
+
+    Swap editor/checker at minute 15; keep this task open. Full preparation/help: this block’s `GROUP_TASK.md`.
     """)
     return
 
@@ -58,7 +72,7 @@ def _(MODEL, mo):
     # Hands-on Prompt Engineering
     **Day 2 · Block 1 · slides 9–14; launch slide 17.**
 
-    Work in pairs in breakout rooms for 15 minutes after guided setup. Predict → complete two short TODOs → run real
+    Work in pairs in breakout rooms for 30 minutes. Predict → complete two short TODOs → run real
     local inference → inspect raw outputs → change one input → explain → download.
     Show each TODO's code, replace `None`, run with **Shift+Enter**. Keep function names.
     Model: **{MODEL}**, CPU, greedy decoding, 96-token output cap. A small model can
@@ -159,7 +173,7 @@ def _(factual_judgments, measured_rows, mo):
 def _(REASONING_EXAMPLE, REASONING_QUESTION, mo):
     mo.md(f"""
     ## 3. Compare a checkable reasoning demonstration
-    Swap editors. TODO 2 returns a user instruction string for `question`.
+    Start here in the first four minutes. TODO 2 returns a user instruction string for `question`.
     Without an example ask for the final count. With an example include the supplied
     worked demonstration, then ask for a short calculation and final count.
     Keep the actual question in both variants. Do not put its answer into the prompt.

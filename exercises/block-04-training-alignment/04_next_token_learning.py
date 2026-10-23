@@ -37,19 +37,23 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    ## Exercise + breakout: your shared task
+    ## Learning-update investigation
 
-    **15 minutes in pairs after guided setup.** Connect negative-log loss, gradient descent and a control experiment to evidence of learning.
+    **30 minutes in pairs · rooms 14:50–15:20.** What evidence would convince you that parameters learned something rather than merely ran again?
 
-    1. Predict the ordering of loss for target probabilities 0.25 and 0.5. Complete both bounded TODOs and check one scalar parameter update by hand.
+    **From the preceding slides:** Target loss is −log(p). Gradient descent changes parameters. Inference reads existing weights; a lower training loss needs evaluation.
 
-    2. Run rate 0.5 for 40 updates. Record before/after target probability and loss. Repeat with rate 0 and the same update count, keeping everything else fixed.
+    1. Predict which target probability, 0.25 or 0.5, receives greater loss. Implement target loss and the update function. Check one scalar update by hand; name the parameter, gradient and learning rate.
 
-    3. Compare W/b changes across the two runs. Explain why lower training loss cannot establish factual accuracy, alignment or generalization; specify one additional evaluation you would need.
+    2. Run η=0.5 for 40 updates. Record before/after target probability, mean loss and one W/b entry. Repeat from the same initial state at η=0 with the same update count. Inspect both curves and parameter tables.
 
-    **Bring back:** One checked loss/update calculation, measured baseline/zero-rate comparison and a stated evaluation limit.
+    3. Swap editor/checker. Choose either learning rate or update count to change, write a hypothesis and keep everything else fixed. Try to improve the measured loss with a bounded number of updates. Record the chosen setting and compare with the baseline; an unchanged or worse result is useful evidence.
 
-    Swap editor/checker halfway. Record in the observation fields, save code and download findings. The complete task and setup are in this block’s `GROUP_TASK.md`. Prerequisite TODOs discussed in plenary belong to setup.
+    4. Defend a setting for this supplied training task using both probabilities and parameter changes. Separate evidence of fitting these examples from evidence of generalization, factual accuracy or alignment. Propose one unseen-context evaluation before claiming a better assistant.
+
+    **Your route:** 0–4 min: predict loss/control outcomes. 4–14: implement, check a scalar update and run the baseline. 14–24: compare the zero-rate control and one chosen intervention, swapping roles at minute 15. 24–30: inspect parameters, defend a limited conclusion and export.
+
+    **Bring back:** Checked loss/update calculation, baseline/zero-rate curves and parameters, one self-chosen intervention and a qualified learning claim with a next evaluation. Record each setting/result before changing a control. Download intermediate runs if you need to keep their tables; the final export contains the current run and baseline. Save code and download findings. Full task: `GROUP_TASK.md`.
     """)
     return
 
@@ -61,7 +65,7 @@ def _(mo):
     **Block 4 · Day 1 slide 76: Watch a tiny model learn in marimo**
 
     Predict → complete two short TODOs → run → change one setting → explain → download.
-    Work in pairs for 15-minute group task after guided setup; swap editors before the second TODO.
+    Work in pairs for 30-minute investigation after guided setup; swap editor/checker at minute 15.
     Show a TODO cell's code, replace `None`, and run with **Shift+Enter**.
     Waiting messages are normal. Keep function names and return lines.
     This trains a tiny output layer on local toy data, with fixed features;
@@ -169,10 +173,25 @@ def _(learning_rate, loss_ok, loss_plot, mo, train, update_count, update_ok):
     baseline = train(target_loss, update_parameter) if loss_ok and update_ok else None
     run_result = train(target_loss, update_parameter, float(learning_rate.value), int(update_count.value)) if loss_ok and update_ok else None
     plot_svg = loss_plot(run_result['history']) if run_result and run_result['history'] else None
+    _parameter_rows = []
+    if run_result and 'before' in run_result and baseline and 'after' in baseline:
+        for _a, _row in enumerate(run_result['before']['weights']):
+            for _j, _before in enumerate(_row):
+                _after = run_result['after']['weights'][_a][_j]
+                _parameter_rows.append({'Parameter': f'W[{_a},{_j}]', 'Before selected run': _before,
+                                        'After selected run': _after, 'Change': _after - _before,
+                                        'After baseline (rate 0.5, 40 steps)': baseline['after']['weights'][_a][_j]})
+        for _j, _before in enumerate(run_result['before']['bias']):
+            _after = run_result['after']['bias'][_j]
+            _parameter_rows.append({'Parameter': f'b[{_j}]', 'Before selected run': _before,
+                                    'After selected run': _after, 'Change': _after - _before,
+                                    'After baseline (rate 0.5, 40 steps)': baseline['after']['bias'][_j]})
     mo.vstack([
         mo.md("Complete both TODOs to run the prepared training loop.") if not run_result else mo.md(f"**Baseline mean loss:** {baseline['history'][0]['Mean loss']:.4f} → {baseline['history'][-1]['Mean loss']:.4f}. **Selected run:** {run_result['history'][0]['Mean loss']:.4f} → {run_result['history'][-1]['Mean loss']:.4f}."),
         mo.callout(run_result['error'], kind="warn") if run_result and 'error' in run_result else mo.md("The selected result is from your completed functions; it is not a full language model."),
         mo.ui.table(run_result['rows'], selection=None) if run_result and 'rows' in run_result else mo.md("Target comparison table waits for a valid run."),
+        mo.md("### Inspect what actually changed\nW[feature, token] maps a fixed input feature to a vocabulary score; b[token] is the token bias. Pick one row and compare Before, After and Change. The baseline column always uses rate 0.5 and 40 updates from the same initial weights. With rate 0 or zero updates, inspect whether each selected-run delta stays zero. Each row comes from the measured run."),
+        mo.ui.table(_parameter_rows, selection=None) if _parameter_rows else mo.md("Parameter snapshots wait for a valid completed run."),
         mo.Html(plot_svg) if plot_svg else mo.md("The labelled loss plot waits for a valid run."),
     ])
     return baseline, plot_svg, run_result
@@ -196,11 +215,11 @@ def _(
                    rate=learning_rate.value, steps=update_count.value,
                    checks=dict(loss=loss_ok, update=update_ok), baseline=baseline, selected=run_result)
     mo.vstack([
-        mo.md("## 4. Save and share \nSave code with Ctrl+S / Cmd+S. Download findings because widget inputs are not saved in Python. Share one target calculation, the baseline/controlled curve and an explanation at slide 74, **What changed when the loss fell?** The export includes measured probabilities, W,b and both runs, plus your notes; it does not export function source."),
+        mo.md("## 4. Save and share \nSave code with Ctrl+S / Cmd+S. Download findings because widget inputs are not saved in Python. Share one target calculation, the baseline/controlled curve and an explanation at slide 77, **What changed when the loss fell?** The export includes measured probabilities, W,b and both runs, plus your notes; it does not export function source."),
         mo.download(json.dumps(_report, indent=2).encode(), filename="results-block4.json", label="Download findings and measured runs"),
         mo.download(plot_svg.encode(), filename="training-loss.svg", label="Save loss plot") if plot_svg else mo.md("Plot download becomes available after both TODOs."),
         mo.accordion({"Hints and troubleshooting": mo.md("Loss: identify the target's probability, use a natural log and consider its sign. Update: move opposite the derivative and scale by the learning rate. Zero rate should preserve all parameters. If a cell turns red, undo and check indentation/return values. The loop, softmax and gradients are supplied in llm_exercises/block4.py. Read them after finishing if useful; neither TODO is solved there. A falling training curve says nothing yet about held-out data.")}),
-        mo.md("Sources: [autoregressive pretraining](https://arxiv.org/abs/2005.14165), [cross-entropy definition](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html), [marimo](https://docs.marimo.io/getting_started/). Student instructions are self-contained here and in this block's README. Trainer mapping: Day 1 slides 65–67 and 73–74."),
+        mo.md("Sources: [autoregressive pretraining](https://arxiv.org/abs/2005.14165), [cross-entropy definition](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html), [marimo](https://docs.marimo.io/getting_started/). Student instructions are self-contained here and in this block's README. Trainer mapping: Day 1 slides 68–70 and 76–77."),
     ])
     return
 

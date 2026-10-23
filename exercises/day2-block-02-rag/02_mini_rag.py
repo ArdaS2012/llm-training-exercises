@@ -33,19 +33,33 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    ## Exercise + breakout: your shared task
+    ## Your 30-minute investigation
 
-    **15 minutes in pairs after guided setup.** Build a small own-document RAG and locate the stage responsible for a result.
+    **Turn your own permitted documents into a research assistant, then trace one answer back through the pipeline to find what helped or failed.**
 
-    1. Predict source IDs and a chunk-size effect. Complete the reranked evidence-selection TODO; run the supplied baseline plus changed-chunk comparison for all three questions. Keep models, questions, overlap (20 words), candidate limit (5) and selected-passage limit (2) fixed.
+    ### Remember from the slides
+    Chunks must keep supporting facts together. Cosine similarity ranks candidates, not truth. Reranking only reorders retrieved candidates. A citation must exist AND support the claim.
 
-    2. For one supported question, compare top retrieved/reranked passages and actual generated answers. Quote original words and identify whether a failure starts in retrieval or generation.
+    **0–6 · Set a source contract**
+    Choose two questions your own texts can answer and one whose answer is absent from ALL texts. Quote reference words now; mark the relevant chunk IDs separately for each configuration. Freeze both configurations and reserve Q2/Q3 before either run. Predict which fact a smaller/larger chunk might lose. If you inspect these cases while improving the system, call the later evaluation retrospective.
 
-    3. Check the absent-answer question against all documents. Record abstention, invention or uncertainty honestly. Recommend one next fix from evidence and export the records for evaluation.
+    **6–12 · Wire the evidence**
+    Complete evidence selection and labeled-context TODOs. Inspect the feedback on your own code. Explain to your partner why a score alone is insufficient: the generator needs both the unchanged passage and its source ID.
 
-    **Bring back:** Three paired question/answer/source records, original-source checks, one diagnosed failure/limitation and a justified next fix.
+    **12–22 · Run your experiment**
+    Run baseline 80-word chunks and one changed chunk size for the same three questions. Hold models, questions, overlap (20 words), candidate limit (5) and passage limit (2) fixed. Swap editor/checker at minute 15. While calls run, use source texts to check the reference labels; do not tune to reserved answers.
 
-    Swap editor/checker halfway. Record in the observation fields, save code and download findings. The complete task and setup are in this block’s `GROUP_TASK.md`. Prerequisite TODOs discussed in plenary belong to setup.
+    **22–27 · Follow the broken link**
+    Pick one surprising result. Walk original source → chunk boundary → vector candidates → reranked/selected context → raw answer. Point to the first stage that lost or distorted support. Check the absent question across the whole corpus. Recommend the next fix and say what measurement would test it.
+
+    **27–30 · Hand off to evaluation**
+    Download all six question/answer/source records and your findings for Block 4. Save your source-derived labels locally. Both partners explain the traced case and one limit.
+
+    **Bring back:** Own-document question/reference records, paired rankings/selected context/raw answers, source checks, a failure-stage diagnosis and one justified next fix; export retained for evaluation.
+
+    **Limit:** Two retained 80-word chunks supply up to 160 word occurrences; two 40-word chunks up to 80. Fixed overlap also changes its proportion. This tests a whole chunk setting, not boundary placement alone. Fewer chunks can produce fewer candidates/passages. Do not claim every change isolates a single mechanism.
+
+    Swap editor/checker at minute 15; keep this task open. Full preparation/help: this block’s `GROUP_TASK.md`.
     """)
     return
 
@@ -54,7 +68,7 @@ def _(mo):
 def _(EMBED_MODEL, RERANK_MODEL, mo):
     mo.md(f"""
     # Build a Mini-RAG over your own documents
-    **Day 2 Block 2 · launch slide 33. Work in pairs in breakout rooms for 15 minutes after guided setup.**
+    **Day 2 Block 2 · launch slide 33. Work in pairs in breakout rooms for 30 minutes.**
 
     You will ingest your own permitted text → split chunks → embed → search Chroma →
     rerank → select evidence → generate → check sources. Two short TODOs are yours;
@@ -92,6 +106,29 @@ def _(folder, mo, read_documents):
     mo.vstack([mo.callout(document_issue, kind='info') if document_issue else mo.callout('Documents read locally. Check these are your permitted texts.', kind='success'),
                mo.ui.table(documents, selection=None) if documents else mo.md('Add your documents; there is no hidden default corpus.')])
     return (documents,)
+
+
+@app.cell(hide_code=True)
+def _(changed_size, chunk_documents, documents, mo):
+    preview_chunks = {
+        "baseline": chunk_documents(documents, 80, 20),
+        "changed": chunk_documents(documents, changed_size.value, 20),
+    } if documents else {}
+    mo.vstack([
+        mo.md("### Inspect both chunk inventories before generation\nThese are exact source slices, not retrieved results or model answers. Locate ALL chunks that support each reference; use different IDs for each setting. Freeze source-derived Q2/Q3 references before either model run."),
+        mo.accordion({variant: mo.ui.table(chunks, selection=None) for variant, chunks in preview_chunks.items()}) if preview_chunks else mo.md("Load your documents above to inspect chunk boundaries and IDs."),
+    ])
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    reference_notes = mo.ui.text_area(
+        label="Before running: record each question's original-source reference/quote and ALL relevant IDs for baseline and changed chunks. Mark Q3 UNKNOWN only after checking the entire corpus.",
+        full_width=True, debounce=False,
+    )
+    mo.vstack([mo.md("### Freeze your source references\nKeep these notes independent of generated answers. Inspect chunk boundaries above, predict the result, then run. The export retains these notes for your evaluation labels. If you use Q2/Q3 to revise the system, describe their later scores as retrospective."), reference_notes])
+    return (reference_notes,)
 
 
 @app.cell(hide_code=True)
@@ -240,6 +277,7 @@ def _(
     changed_size,
     documents,
     findings,
+    reference_notes,
     json,
     judgments,
     mo,
@@ -250,8 +288,8 @@ def _(
     _export = dict(format='edv-mini-rag-v1', embedding_model=EMBED_MODEL,embedding_revision=EMBED_REVISION,
                    rerank_model=RERANK_MODEL,rerank_revision=RERANK_REVISION,documents=documents,
                    questions=questions.value,prediction=prediction.value,changed_chunk_words=changed_size.value,
-                   records=[dict(r,manual_judgment=j) for r,j in zip(records,judgments.value)], findings=findings.value)
-    mo.vstack([mo.md('## 6. Save and hand off \nSave Python, then download results to preserve widget values. Share three baseline question/answer/source records, the absent-answer finding and the controlled comparison. The export keeps both configurations and full source text for Block 4 evaluation. Inspect it before sharing; store it locally. Return to slide 33.'),
+                   records=[dict(r,manual_judgment=j) for r,j in zip(records,judgments.value)], findings=findings.value, source_reference_notes=reference_notes.value)
+    mo.vstack([mo.md('## 6. Save and hand off \nSave Python, then download results to preserve widget values. Share three baseline question/answer/source records, the absent-answer finding and the controlled comparison. The export keeps both configurations and full source text for Block 4 evaluation. Inspect it before sharing; store it locally. Return to the findings review on slide 34.'),
         mo.download(json.dumps(_export,indent=2).encode(),filename='results-day2-block2.json',label='Download questions, sources, rankings, raw answers and findings'),
         mo.accordion({'Hints and recovery':mo.md('Ordering and limiting a list are separate operations. Keep whole dictionaries, not just scores. Build one string, not a list. Python word counts differ from model tokens; shorten a text if context overflows. Missing model files: repeat online preflight. A failed call leaves an error record; it is not a measured answer. Export after reviewing the current run: changing settings clears reactive results. Smaller chunks need not improve relevance. Restart the launcher after saving; download preserves observations separately.')}),
         mo.md('Sources: [RAG paper](https://arxiv.org/abs/2005.11401), [Chroma](https://docs.trychroma.com/docs/collections/add-data), [embedding card](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2), [cross-encoder](https://huggingface.co/cross-encoder/ms-marco-TinyBERT-L2-v2).')])

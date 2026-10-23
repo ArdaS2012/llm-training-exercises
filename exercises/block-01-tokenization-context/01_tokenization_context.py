@@ -34,7 +34,7 @@ def _(mo):
     mo.md("""
     # BPE Detective: build a tiny tokenizer
 
-    **Exercise + breakout · Block 1 · 15 minutes in pairs after guided setup.**
+    **Exercise + breakout · Block 1 · 30 minutes in pairs after guided setup.**
     Learn how training text determines BPE merges, then use the learned rules on
     a word the tokenizer has never seen. Basic Python loops, lists and dictionaries
     are enough. Setup, training control and result displays are supplied.
@@ -47,6 +47,30 @@ def _(mo):
     and return line. Run with **Shift+Enter**. Later displays update automatically.
     A **waiting** message is normal until you implement that function. The two checks
     are independent, so you can work on either TODO first.
+    """)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md("""
+    ## Tokenizer design desk
+
+    **30 minutes in pairs · rooms 09:35–10:05.** Can a small change in training text change the rules used to encode new words?
+
+    **From the preceding slides:** Frequent adjacent pieces become vocabulary entries. Encoding reuses learned rules. Every resulting token consumes context.
+
+    1. Predict the first merge from at least two corpus contributions. Build the weighted-count and merge functions, using the supplied small input/output examples. Trace one merge by hand before trusting the three-round display.
+
+    2. Keep the baseline, then change only `can` from 10 to 20. Predict before running. Inspect the changed merge order and the pieces of `maps` and unseen `rap`. Explain one choice using a count, and explain an unchanged probe if that is what you observe.
+
+    3. Choose one additional `can` frequency using the existing control. Try to make a different merge win, rather than turning controls at random. Record the frequency and the winning count. Restore the baseline before comparing the supplied real English/German/code tokenizer examples.
+
+    4. Use the prepared real-tokenizer counts and context budget to choose what to remove or shorten. Give a tradeoff. Explain why training this character-BPE toy does not measure a language model’s answer quality or latency.
+
+    **Your route:** 0–4 min: inspect the corpus and predict. 4–14: implement and check the two steps. 14–24: compare frequency changes and unseen-word encoding, swapping editor/checker at minute 15. 24–30: inspect real token counts, decide on the budget and export evidence.
+
+    **Bring back:** Initial prediction, baseline and changed-frequency traces, your extra frequency test, unseen-word explanation, and a context-budget recommendation with one limitation. Record each setting/result before changing a control. Download intermediate runs if you need to keep their tables; the final export contains the current run and baseline. Save code and download findings. Full task: `GROUP_TASK.md`.
     """)
     return
 
@@ -384,10 +408,10 @@ def _(mo):
           State a limitation of this toy and a justified context-budget decision
           from the prepared transfer check.
 
-        **Time guide:** 2 minutes predict, 7 implement, 4 compare/explain, 2 record/export.
+        **Time guide:** 4 minutes predict, 10 build/check, 10 experiment, 6 explain/export.
         If blocked, use the folded concept checks or ask for a trainer room visit.
         An unchanged probe result is valid evidence; explain why rather than inventing
-        a change. Optional extension: predict one further merge before running it.
+        a change. Use your chosen frequency test to challenge a prediction; stop exploring when six minutes remain so you can explain and export.
         """), conclusion,
     ])
     return (conclusion,)

@@ -3,9 +3,9 @@
 
 ## Exercise + breakout
 
-Follow the [15-minute group task](GROUP_TASK.md) after guided setup.
+Follow the [30-minute investigation](GROUP_TASK.md) after guided setup.
 
-Practice for Day 1, 14:45–15:05 (guided setup, then 15-minute exercise + breakout). You will calculate a target's
+Practice for Day 1, 14:45–15:20 (guided setup, then 30-minute exercise + breakout). You will calculate a target's
 cross-entropy penalty, apply a parameter update, run a supplied tiny output-layer
 training loop, and explain how loss and target probability change.
 
@@ -27,7 +27,7 @@ The correct notebook is [04_next_token_learning.py](04_next_token_learning.py).
 If a browser does not open, visit http://127.0.0.1:2718. Both shared wrappers forward
 `--block 4`, `--check` and `--port`; use `--port 2720` for a port conflict.
 
-Follow the [15-minute group task](GROUP_TASK.md) after guided setup.
+Follow the [30-minute investigation](GROUP_TASK.md) after guided setup.
 
 Show code with the cell's code control and rerun with Shift+Enter. Unfinished TODOs
 show waiting messages. Submit/share one probability-to-loss calculation, the two
@@ -47,7 +47,7 @@ inputs. No clipping is needed for the moderate default logits. If an aggressive 
 underflows a target probability, reduce it; full training libraries use log-softmax.
 Read the formulas and conceptual hints in the notebook before requesting help.
 
-Current handoff: LLM Day 1 slide 76, **Exercise: test a learning update**. The combined room task runs 14:50–15:05; setup/review are separate.
+Current handoff: LLM Day 1 slide 76, **Exercise: test a learning update**. The combined room task runs 14:50–15:20; setup/review are separate.
 
 References: [GPT-3 pretraining](https://arxiv.org/abs/2005.14165),
 [cross-entropy](https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html).
@@ -55,3 +55,7 @@ References: [GPT-3 pretraining](https://arxiv.org/abs/2005.14165),
 ## Current teaching handoff
 
 LLM Day 1, Block 4: actual slide **76 — Exercise: test a learning update** launches the combined exercise + breakout. Return to plenary at the agenda’s room end. The notebook and group task are self-contained; private trainer files are not required.
+
+## Investigation and slide takeaways
+
+The [30-minute task](GROUP_TASK.md) keeps the relevant slide takeaways beside the investigation, explains the controls and required evidence, and gives you time to try an additional prediction. What evidence would convince you that parameters learned something rather than merely ran again?

@@ -1,6 +1,6 @@
 # Block 2 — Build a Tiny Attention Head
 
-Day 1 practice allocation **11:10–11:40**; room task **11:20–11:35** after guided setup. Current launch: slide **39 — Exercise: trace and perturb attention**.
+Day 1 practice allocation **11:00–11:40**; room task **11:05–11:35** after guided setup. Current launch: slide **39 — Exercise: trace and perturb attention**.
 
 Use the [shared setup and troubleshooting](../../README.md), then run from this repository:
 
@@ -17,7 +17,7 @@ Know what Q, K and V represent from the slide explanation; basic Python lists/lo
 
 ## Exercise + breakout
 
-Follow the [15-minute group task](GROUP_TASK.md) after guided setup. It defines the required comparison, evidence and shared result. Keep the technical help below for the bounded TODOs.
+Follow the [30-minute investigation](GROUP_TASK.md) after guided setup. It defines the required comparison, evidence and shared result. Keep the technical help below for the bounded TODOs.
 
 ## Checks and help
 
@@ -30,3 +30,7 @@ Hints and boundary feedback are in the notebook. Undo if a cell turns red; check
 ## Current teaching handoff
 
 LLM Day 1, Block 2: actual slide **39 — Exercise: trace and perturb attention** launches the combined exercise + breakout. Return to plenary at the agenda’s room end. The notebook and group task are self-contained; private trainer files are not required.
+
+## Investigation and slide takeaways
+
+The [30-minute task](GROUP_TASK.md) keeps the relevant slide takeaways beside the investigation, explains the controls and required evidence, and gives you time to try an additional prediction. Which change reroutes information, and which changes only the information being carried?

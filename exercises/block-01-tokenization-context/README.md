@@ -16,7 +16,7 @@ The default launcher without `--block` also opens Block 1. Keep the terminal ope
 
 ## What you do
 
-Follow the [15-minute pair task](GROUP_TASK.md). Guided setup happens before rooms open. Alternate editor/checker roles.
+Follow the [30-minute investigation](GROUP_TASK.md). Guided setup happens before rooms open. Alternate editor/checker roles.
 
 ### Start with a tiny example
 
@@ -72,7 +72,7 @@ For connection, port or installation problems use [shared troubleshooting](../..
 
 ## Course mapping and sources
 
-LLM Day 1 slide **21 — Exercise: learn and test BPE merges** launches the 09:50–10:05 room task; slide 24 debriefs the evidence. Setup and plenary review are separate.
+LLM Day 1 slide **21 — Exercise: learn and test BPE merges** launches the 09:35–10:05 room task; slide 24 debriefs the evidence. Setup and plenary review are separate.
 
 Background for after the exercise: [Hugging Face BPE lesson](https://huggingface.co/learn/llm-course/en/chapter6/5), [tiktoken](https://github.com/openai/tiktoken), [SentencePiece](https://github.com/google/sentencepiece).
 
@@ -85,3 +85,7 @@ uv run --locked marimo check --strict exercises/block-01-tokenization-context/01
 ```
 
 Instructor implementations, reference traces and completed-notebook checks stay local in the ignored `instructor/` folder.
+
+## Investigation and slide takeaways
+
+The [30-minute task](GROUP_TASK.md) keeps the relevant slide takeaways beside the investigation, explains the controls and required evidence, and gives you time to try an additional prediction. Can a small change in training text change the rules used to encode new words?

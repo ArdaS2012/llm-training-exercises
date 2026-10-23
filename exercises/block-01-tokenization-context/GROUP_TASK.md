@@ -1,39 +1,41 @@
-# Exercise: learn and test BPE merges
+# Exercise: Tokenizer design desk
 
-**Exercise + breakout · LLM Day 1 Block 1 · 15 minutes in pairs**
+**30 minutes in pairs · LLM Day 1 · rooms 09:35–10:05**
 
-Learning goal: explain how corpus frequencies produce BPE merge rules, and distinguish learning those rules from applying them to new text.
+## Your investigation
+
+Can a small change in training text change the rules used to encode new words? Work with the running notebook, inspect its results and make a decision together. One partner edits while the other checks the prediction and evidence; swap at minute 15.
+
+## Keep these slide takeaways beside the task
+
+From slides 13–20: vocabulary, BPE/SentencePiece, context and cost: **Frequent adjacent pieces become vocabulary entries. Encoding reuses learned rules. Every resulting token consumes context.**
+
+These ideas tell you what to measure. Use the definitions and worked input/output examples next to each TODO whenever you need help. A successful check establishes a function contract; the comparisons below establish your understanding.
 
 ## Before rooms open
 
-Complete the [shared setup](../../README.md) and open the notebook from the repository root:
+Complete the [shared setup](../../README.md), open `uv run --locked python start.py --block 1` from the student repository root and practise running/saving cells. Downloads and environment repair precede class. Live handoff: 09:30–09:35; leave the implementations and predictions for the room.
 
-```sh
-uv run --locked python start.py --block 1
-```
+## Try it, inspect it, explain it
 
-Inspect the corpus table and the two function interfaces together. You need basic Python loops, dictionaries, lists and tuple keys. All other code is supplied. Show where to edit/run a cell and record predictions; leave the BPE implementation for the room. Downloading the real-tokenizer asset happens during setup.
+1. Predict the first merge from at least two corpus contributions. Build the weighted-count and merge functions, using the supplied small input/output examples. Trace one merge by hand before trusting the three-round display.
 
-**Start with the notebook's `cat cat car` example.** Read the whole training text
-first, then the table: `cat` appears twice and `car` once. `frequencies` stores
-these quantities; `splits` shows the pieces of each word. Follow how the table
-adds each word's contribution to one neighbouring-pair count. No code is needed
-for this walkthrough. The main exercise uses the separate corpus displayed at
-the start of the notebook. All its training words are already supplied.
+2. Keep the baseline, then change only `can` from 10 to 20. Predict before running. Inspect the changed merge order and the pieces of `maps` and unseen `rap`. Explain one choice using a count, and explain an unchanged probe if that is what you observe.
 
-## Your task
+3. Choose one additional `can` frequency using the existing control. Try to make a different merge win, rather than turning controls at random. Record the frequency and the winning count. Restore the baseline before comparing the supplied real English/German/code tokenizer examples.
 
-1. **Predict a merge.** Each corpus entry gives a word and how often it occurs. Tokens initially are characters. Predict the most frequent adjacent pair and justify it using contributions from at least two words. Record your prediction before completing TODO 1.
-2. **Build the two BPE steps.** In TODO 1, return weighted pair frequencies from the current token lists. In TODO 2, return a new list after applying one selected merge left to right without overlaps. Read the notebook's input/output contracts and boundary rules. The supplied trainer selects the winning pair, recounts and runs three rounds. Use the feedback, then explain one change between successive rounds.
-3. **Change one training frequency.** Keep the baseline. Predict what will happen when only `can` changes from frequency 10 to 20; then run that change. Compare the merge order and the final pieces for `maps`. Give a frequency-based explanation for one changed choice. Predict how each trained tokenizer splits the unseen word `rap`, then reveal the results. Explain why encoding this new word does not retrain the tokenizer.
-4. **Connect to context.** Open the prepared real-tokenizer/context section. Choose one change that makes the supplied request fit, state its tradeoff, and explain why this toy does not establish a real model's speed or answer quality. No extra coding is needed.
+4. Use the prepared real-tokenizer counts and context budget to choose what to remove or shorten. Give a tradeoff. Explain why training this character-BPE toy does not measure a language model’s answer quality or latency.
+
+## Your 30-minute route
+
+0–4 min: inspect the corpus and predict. 4–14: implement and check the two steps. 14–24: compare frequency changes and unseen-word encoding, swapping editor/checker at minute 15. 24–30: inspect real token counts, decide on the budget and export evidence.
 
 ## Bring back
 
-Download one findings file containing your prediction, both three-round traces, the probe-word comparison, and your shared explanation. State one limitation of the character-based toy. Include the context decision in the conclusion field. Both partners should be able to explain the result; swap editor/checker halfway.
+Initial prediction, baseline and changed-frequency traces, your extra frequency test, unseen-word explanation, and a context-budget recommendation with one limitation. Before changing another control, record the current setting and result in the notebook’s observation/conclusion field, or download that run. The export holds the current run and baseline, so retain intermediate evidence before replacing it. Save code separately: browser fields are retained through the findings download, not by saving Python.
 
-Save Python code as well: saving the notebook does not preserve browser text fields. If blocked, open a folded concept check or ask for a room visit. Honest unchanged results count as evidence when explained.
+Both partners should explain one result. If stuck, use the folded conceptual help or ask for a room visit. Explain honest unchanged/failed results. Stop optional exploration when six minutes remain and finish your explanation.
 
-## Timebox
+## Course handoff
 
-2 minutes to predict, 7 to implement, 4 to compare/explain, 2 to record/export. Return at the trainer's announced time. If you finish early, predict one further merge and justify it before testing.
+Actual Day 1 slide **21**, followed by the existing plenary review and external quiz.
