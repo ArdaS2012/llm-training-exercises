@@ -58,7 +58,7 @@ truncated; record it as a failure. Buttons bound model calls; no automatic paid 
 A fixed greedy configuration improves comparability but is not a cross-hardware
 bit-for-bit promise. The download includes all inputs: inspect it before sharing.
 
-Current handoff: LLM Day 2 slide 17, **Exercise: test a prompt revision**. The combined room task runs 10:00–10:15; setup/review are separate.
+Current handoff: LLM Day 2 slide 17, **Exercise: test a prompt revision**. The combined room task runs 09:55–10:10; setup/review are separate.
 
 ## Current teaching handoff
 

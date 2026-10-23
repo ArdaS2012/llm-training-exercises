@@ -1,6 +1,6 @@
 # Block 3 — Causal Masking & Sampling
 
-Current handoff: LLM Day 1 slide 60, **Exercise: masking versus sampling**. The combined room task runs 13:40–13:55; setup/review are separate.
+Current handoff: LLM Day 1 slide 60, **Exercise: masking versus sampling**. The combined room task runs 13:45–14:00; setup/review are separate.
 
 Use the [shared installation and troubleshooting guide](../../README.md). Launch from the student repository:
 

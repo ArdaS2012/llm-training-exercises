@@ -1,6 +1,6 @@
 # Block 2 — Build a Tiny Attention Head
 
-Day 1 practice allocation **11:25–12:00**; room task **11:40–11:55** after guided setup. Current launch: slide **39 — Exercise: trace and perturb attention**.
+Day 1 practice allocation **11:10–11:40**; room task **11:20–11:35** after guided setup. Current launch: slide **39 — Exercise: trace and perturb attention**.
 
 Use the [shared setup and troubleshooting](../../README.md), then run from this repository:
 

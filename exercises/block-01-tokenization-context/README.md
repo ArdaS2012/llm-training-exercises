@@ -72,7 +72,7 @@ For connection, port or installation problems use [shared troubleshooting](../..
 
 ## Course mapping and sources
 
-LLM Day 1 slide **21 — Exercise: learn and test BPE merges** launches the 10:00–10:15 room task; slide 24 debriefs the evidence. Setup and plenary review are separate.
+LLM Day 1 slide **21 — Exercise: learn and test BPE merges** launches the 09:50–10:05 room task; slide 24 debriefs the evidence. Setup and plenary review are separate.
 
 Background for after the exercise: [Hugging Face BPE lesson](https://huggingface.co/learn/llm-course/en/chapter6/5), [tiktoken](https://github.com/openai/tiktoken), [SentencePiece](https://github.com/google/sentencepiece).
 
